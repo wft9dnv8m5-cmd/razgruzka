@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Next Layer of Intelligence</title>
+<title>razgruzKA — Вы ставите задачу, мы устраняем рутину</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
@@ -43,7 +43,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body {
     width: 100%;
-    /* Включаем скролл для эффекта фона */
     overflow-x: hidden;
     overflow-y: auto;
     background-color: var(--bg);
@@ -78,7 +77,6 @@
         #050505 calc(50% + calc(746 * var(--u))));
   }
   
-  /* Эффект скролла фона */
   .scroll-tint {
     position: absolute; inset: 0;
     background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(8, 22, 26, 0.95) 100%);
@@ -107,8 +105,13 @@
   /* ═════════ HEADER ═════════ */
   .topbar { position: fixed; inset: 0; z-index: 10; pointer-events: none; height: 100px; }
   .topbar > * { pointer-events: auto; position: absolute; }
-  .brand { left: calc(75 * var(--u)); top: calc(27 * var(--u)); width: calc(31.5 * var(--u)); height: calc(48.5 * var(--u)); }
-  .brand svg { width: 100%; height: 100%; display: block; }
+  
+  .brand { 
+    left: calc(75 * var(--u)); top: calc(27 * var(--u)); height: calc(48.5 * var(--u)); 
+    display: flex; align-items: center; gap: calc(14 * var(--u));
+  }
+  .brand svg { height: 100%; width: auto; display: block; }
+  .brand-text { font-size: calc(26 * var(--u)); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
   
   .links {
     left: 50%; top: calc(51 * var(--u));
@@ -131,8 +134,8 @@
 
   .pill-nav {
     right: calc(75.4 * var(--u)); top: calc(27 * var(--u));
-    width: calc(175 * var(--u)); height: calc(49 * var(--u));
-    font-size: calc(20.6 * var(--u));
+    width: calc(200 * var(--u)); height: calc(49 * var(--u)); /* Увеличено для русского текста */
+    font-size: calc(18.6 * var(--u));
   }
 
   #burger { display: none; }
@@ -145,7 +148,7 @@
   
   .headline {
     left: calc(75.5 * var(--u)); top: calc(230.5 * var(--u));
-    font-size: calc(71.6 * var(--h)); line-height: calc(80.5 / 71.6);
+    font-size: calc(64 * var(--h)); line-height: calc(80.5 / 71.6);
     font-weight: 400; letter-spacing: calc(0.3 * var(--h));
     color: var(--ink); white-space: nowrap;
   }
@@ -161,11 +164,11 @@
 
   .pill-cta {
     left: calc(74.9 * var(--u)); top: calc(230.5 * var(--u) + 264.5 * var(--h));
-    width: calc(175.6 * var(--h)); height: calc(50 * var(--h));
+    width: calc(220 * var(--h)); height: calc(50 * var(--h));
     font-size: calc(20.6 * var(--h));
   }
   .ghost {
-    left: calc(74.9 * var(--u) + 220.6 * var(--h)); top: calc(230.5 * var(--u) + 279.5 * var(--h));
+    left: calc(74.9 * var(--u) + 250.6 * var(--h)); top: calc(230.5 * var(--u) + 279.5 * var(--h));
     font-size: calc(20.6 * var(--h)); font-weight: 500;
     letter-spacing: calc(0.12 * var(--h)); color: #fff;
     transition: opacity 0.2s;
@@ -269,12 +272,14 @@
     body.is-open .menu-list li:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.28s; }
     body.is-open .menu-foot { opacity: 1; transform: none; transition-delay: 0.34s; }
 
-    .brand { left: calc(24 * var(--m)); top: calc(28 * var(--m)); width: calc(28 * var(--m)); height: calc(43 * var(--m)); }
-    .headline { left: calc(24 * var(--m)); top: calc(180 * var(--m)); white-space: normal; }
+    .brand { left: calc(24 * var(--m)); top: calc(28 * var(--m)); height: calc(43 * var(--m)); width: auto; gap: calc(10 * var(--m)); }
+    .brand-text { font-size: calc(22 * var(--m)); }
+    
+    .headline { left: calc(24 * var(--m)); top: calc(180 * var(--m)); white-space: normal; font-size: calc(52 * var(--m)); }
     .headline span { display: inline; }
     .sub { left: calc(24 * var(--m)); top: calc(340 * var(--m)); white-space: normal; width: calc(100% - calc(48 * var(--m))); }
     .sub span { display: inline; }
-    .pill-cta { left: calc(24 * var(--m)); top: calc(480 * var(--m)); }
+    .pill-cta { left: calc(24 * var(--m)); top: calc(480 * var(--m)); width: auto; padding: 0 30px; }
     .ghost { left: calc(24 * var(--m)); top: calc(560 * var(--m)); }
 
     .logos { left: calc(24 * var(--m)); top: auto; bottom: calc(40 * var(--m)); width: calc(100% - calc(48 * var(--m))); height: auto; transform: none; display: grid; grid-template-columns: 1fr 1fr; gap: calc(20 * var(--m)); }
@@ -282,7 +287,7 @@
     .lg1, .lg2, .lg3, .lg4 { margin-bottom: calc(30 * var(--m)); }
   }
   @media (min-width: 600px) and (max-aspect-ratio: 11/10) {
-    .headline { font-size: calc(60 * var(--m)); }
+    .headline { font-size: calc(56 * var(--m)); }
     .headline span { display: block; }
     .sub span { display: block; }
     .logos { display: flex; justify-content: space-between; }
@@ -341,7 +346,6 @@
   }
   .demo-close:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
 
-  /* Увеличенный размер iPhone */
   .iphone-frame {
     position: relative;
     height: min(92vh, 920px);
@@ -426,7 +430,6 @@
     transform: translateY(100%); transition: transform 0.6s cubic-bezier(.22, 1, .36, 1);
   }
   .full-site-view.open { transform: translateY(0); }
-  /* Отступ под "чёлку" */
   .full-site-top-safe-area { height: min(6vh, 44px); width: 100%; background: #000; flex-shrink: 0; }
   .full-site-view iframe { width: 100%; flex: 1; border: none; background: #fff; border-radius: 0 0 min(5vh, 47px) min(5vh, 47px); }
 
@@ -456,7 +459,7 @@
 </div>
 
 <header class="topbar">
-  <a href="#" class="brand" aria-label="Home">
+  <a href="#" class="brand" aria-label="Главная">
     <svg viewBox="0 0 31.5 48.5">
       <linearGradient id="bg1" x1="8" y1="0" x2="34.1" y2="28.9" gradientUnits="userSpaceOnUse">
         <stop offset="0" stop-color="#9e9e9e"/><stop offset=".28" stop-color="#a6a6a6"/><stop offset=".34" stop-color="#a3a3a3"/><stop offset=".40" stop-color="#3a3a3a"/><stop offset=".55" stop-color="#414141"/><stop offset=".60" stop-color="#7a7a7a"/><stop offset=".68" stop-color="#8e8e8e"/><stop offset=".80" stop-color="#a9a9a9"/><stop offset=".95" stop-color="#c4c4c4"/><stop offset="1" stop-color="#cccccc"/>
@@ -465,31 +468,32 @@
       <rect x="0.5" y="18.5" width="9" height="10" fill="#fdfdfd"/>
       <rect x="22" y="19.5" width="9.5" height="9.5" fill="#fdfdfd"/>
     </svg>
+    <span class="brand-text">razgruzKA</span>
   </a>
-  <nav class="links" aria-label="Primary">
-    <a href="#">About</a>
-    <a href="#">Features</a>
-    <a href="#">FAQ</a>
-    <a href="#">Contact</a>
+  <nav class="links" aria-label="Основное меню">
+    <a href="#about">О нас</a>
+    <a href="#features">Преимущества</a>
+    <a href="#faq">Вопросы</a>
+    <a href="#contact">Контакты</a>
   </nav>
-  <a href="#" class="pill pill-nav"><span>Get Started</span></a>
-  <button id="burger" aria-label="Menu" aria-expanded="false">
+  <a href="#" class="pill pill-nav" onclick="openDemo(); return false;"><span>Начать работу</span></a>
+  <button id="burger" aria-label="Меню" aria-expanded="false">
     <i></i><i></i>
   </button>
 </header>
 
 <nav class="menu" id="menu">
   <div class="menu-inner">
-    <p class="menu-eyebrow">Menu</p>
+    <p class="menu-eyebrow">Меню</p>
     <ul class="menu-list">
-      <li><a href="#">About</a></li>
-      <li><a href="#">Features</a></li>
-      <li><a href="#">FAQ</a></li>
-      <li><a href="#">Contact</a></li>
+      <li><a href="#about">О нас</a></li>
+      <li><a href="#features">Преимущества</a></li>
+      <li><a href="#faq">Вопросы</a></li>
+      <li><a href="#contact">Контакты</a></li>
     </ul>
     <div class="menu-foot">
-      <a href="#" class="pill"><span>Get Started</span></a>
-      <a href="#" class="ghost">View Architecture</a>
+      <a href="#" class="pill" onclick="openDemo(); return false;"><span>Начать работу</span></a>
+      <a href="#" class="ghost" onclick="openDemo(); return false;">Смотреть демо</a>
       <button class="demo-trigger-mobile" onclick="openDemo()">
         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
         Смотреть демо
@@ -500,11 +504,11 @@
 
 <div class="content-scroll">
   <section class="hero-section">
-    <h1 class="headline"><span>The Next Layer</span> <span>of Intelligence</span></h1>
-    <p class="sub"><span>A unified infrastructure platform to help teams build,</span> <span>ship, and scale AI systems with confidence.</span></p>
+    <h1 class="headline"><span>Вы ставите задачу —</span> <span>мы устраняем рутину</span></h1>
+    <p class="sub"><span>Анализируем ваши тяжелые и однообразные процессы,</span> <span>чтобы превратить их в элегантные автоматизированные решения.</span></p>
     
-    <a href="#" class="pill pill-cta"><span>Get Started</span></a>
-    <a href="#" class="ghost">View Architecture</a>
+    <a href="#" class="pill pill-cta" onclick="openDemo(); return false;"><span>Пройти анкету</span></a>
+    <a href="#" class="ghost" onclick="openDemo(); return false;">Смотреть демо</a>
 
     <div class="logos">
       <div class="lg lg1">
@@ -526,8 +530,7 @@
     </div>
   </section>
 
-  <!-- Секции, которые проявляются при скролле -->
-  <section class="info-sections">
+  <section id="about" class="info-sections">
     <h2>Как это работает</h2>
     <div class="steps-grid">
       <div class="step-card">
@@ -550,7 +553,7 @@
 </div>
 
 <!-- Desktop Phone Trigger -->
-<button class="demo-trigger" onclick="openDemo()" aria-label="Play Demo">
+<button class="demo-trigger" onclick="openDemo()" aria-label="Запустить демо">
   <svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
 </button>
 
@@ -573,21 +576,20 @@
           <button class="opt-btn">Преподаватель</button>
           <button class="opt-btn" id="btnOther">Другое</button>
           
-          <!-- Скрытое поле для своего варианта -->
           <div id="otherWrap" style="opacity: 0; display: none; transition: opacity 0.3s;">
             <input type="text" id="inputOther" class="input-field" placeholder="Введите вашу роль...">
             <button class="submit-btn" id="btnNext1">Далее</button>
           </div>
         </div>
 
-        <!-- Q2 (Проблема) -->
+        <!-- Q2 -->
         <div class="quiz-step" id="step2">
           <div class="q-title">Что отнимает время?</div>
           <textarea id="inputProblem" class="input-field" placeholder="Подробно опишите рутину..."></textarea>
           <button class="submit-btn" id="btnSubmit">Отправить</button>
         </div>
 
-        <!-- Loading / Done -->
+        <!-- Loading -->
         <div class="quiz-step" id="stepDone" style="justify-content: center; align-items: center; text-align: center;">
           <div class="q-title" id="doneText">Анализируем...</div>
         </div>
@@ -630,7 +632,6 @@
 <script>
   /* Скролл эффект для затемнения фона */
   window.addEventListener('scroll', () => {
-    // Вычисляем процент скролла первого экрана
     let scrollVal = Math.min(window.scrollY / window.innerHeight, 1);
     document.body.style.setProperty('--scroll-progress', scrollVal);
   });
@@ -750,27 +751,26 @@
     
     const otherWrap = document.getElementById('otherWrap');
     otherWrap.style.display = 'block';
-    // Плавное появление поля ввода
     await sleep(50);
     otherWrap.style.opacity = '1';
     await sleep(400);
     
-    // 2. Печатаем свой вариант "Я староста"
+    // 2. Ввод своей роли
     await moveCursor('inputOther');
     await tap();
-    cursor.classList.remove('active'); // Прячем курсор при печати
+    cursor.classList.remove('active');
     await typeText('inputOther', 'Я староста');
     
     cursor.classList.add('active');
     await moveCursor('btnNext1');
     await tap();
     
-    // Переход ко второму вопросу
+    // Переход дальше
     document.getElementById('step1').classList.remove('active');
     document.getElementById('step2').classList.add('active');
     await sleep(600);
 
-    // 3. Печатаем проблему
+    // 3. Ввод проблемы
     await moveCursor('inputProblem');
     await tap();
     cursor.classList.remove('active');
@@ -780,7 +780,7 @@
     await moveCursor('btnSubmit');
     await tap();
 
-    // 4. Отправка и ожидание
+    // 4. Отправка
     document.getElementById('step2').classList.remove('active');
     document.getElementById('stepDone').classList.add('active');
     cursor.classList.remove('active');
@@ -789,7 +789,7 @@
     document.getElementById('doneText').innerText = 'Успешно отправлено ✓';
     await sleep(1000);
     
-    // 5. Появление уведомления
+    // 5. Уведомление
     const notif = document.getElementById('demoNotif');
     notif.classList.add('show');
     
@@ -799,18 +799,18 @@
     await tap();
     cursor.classList.remove('active');
     
-    // 6. Открывается письмо
+    // 6. Письмо
     notif.classList.remove('show');
     document.getElementById('emailView').classList.add('open');
     await sleep(1000);
 
-    // 7. Клик по ссылке в письме
+    // 7. Клик по ссылке
     cursor.classList.add('active');
     await moveCursor('siteLinkBtn');
     await tap();
     cursor.classList.remove('active');
 
-    // 8. Открытие сайта на весь экран телефона
+    // 8. Сайт StaroSTATT
     document.getElementById('fullSiteView').classList.add('open');
   }
 </script>
