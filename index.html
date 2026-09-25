@@ -19,6 +19,7 @@
     --pill: #ffffff;
     --pill-ink: #050505;
     --bg: #050505;
+    --line: rgba(255,255,255,0.1);
     
     --scroll-progress: 0;
   }
@@ -40,13 +41,13 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   html, body {
     width: 100%;
     overflow-x: hidden;
-    overflow-y: auto;
     background-color: var(--bg);
     color: var(--ink);
-    font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
   }
@@ -56,8 +57,7 @@
   /* ═════════ FIXED BACKGROUND STAGE ═════════ */
   .fixed-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
   .plate-video {
-    position: absolute;
-    left: 50%; top: calc(1 * var(--u));
+    position: absolute; left: 50%; top: calc(1 * var(--u));
     width: calc(1492 * var(--u)); height: calc(1054 * var(--u));
     transform: translateX(calc(-50% - calc(0.5 * var(--u))));
     object-fit: cover;
@@ -75,29 +75,18 @@
         transparent calc(50% + calc(676 * var(--u))),
         #050505 calc(50% + calc(746 * var(--u))));
   }
-  
   .scroll-tint {
     position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(8, 22, 26, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(5,5,5,0) 0%, rgba(5, 5, 5, 0.98) 100%);
     opacity: var(--scroll-progress);
     transition: opacity 0.1s linear;
   }
 
   @media (max-aspect-ratio: 11/10) {
-    .plate-video {
-      inset: 0; width: 100%; height: 100%; transform: none;
-      object-position: 43% center; left: auto; top: auto;
-    }
+    .plate-video { inset: 0; width: 100%; height: 100%; transform: none; object-position: 43% center; left: auto; top: auto; }
     .fixed-bg::after {
       background: linear-gradient(to right, rgba(5,5,5,.86) 0%, rgba(5,5,5,.66) 42%, rgba(5,5,5,.20) 78%, rgba(5,5,5,.10) 100%),
                   linear-gradient(to bottom, rgba(5,5,5,.72) 0%, rgba(5,5,5,.34) 24%, rgba(5,5,5,.34) 56%, rgba(5,5,5,.80) 82%, rgba(5,5,5,.97) 94%, #050505 100%);
-    }
-  }
-  @media (min-width: 600px) and (max-aspect-ratio: 11/10) {
-    .plate-video { object-position: 44% center; }
-    .fixed-bg::after {
-      background: linear-gradient(to right, rgba(5,5,5,.84) 0%, rgba(5,5,5,.60) 42%, rgba(5,5,5,.16) 78%, rgba(5,5,5,.06) 100%),
-                  linear-gradient(to bottom, rgba(5,5,5,.66) 0%, rgba(5,5,5,.28) 24%, rgba(5,5,5,.30) 56%, rgba(5,5,5,.78) 82%, rgba(5,5,5,.96) 94%, #050505 100%);
     }
   }
 
@@ -107,213 +96,210 @@
   
   .brand { 
     left: calc(75 * var(--u)); top: calc(27 * var(--u)); height: calc(48.5 * var(--u)); 
-    display: flex; align-items: center; gap: calc(14 * var(--u));
+    display: flex; align-items: center; gap: calc(14 * var(--u)); transition: opacity 0.2s;
   }
+  .brand:hover { opacity: 0.8; }
   .brand svg { height: 100%; width: auto; display: block; }
   .brand-text { font-size: calc(26 * var(--u)); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
   
   .links {
     left: 50%; top: calc(51 * var(--u));
     transform: translate(-50%, -50%);
-    display: flex; align-items: center; white-space: nowrap;
+    display: flex; align-items: center; white-space: nowrap; gap: calc(26 * var(--u));
   }
   .links a { font-size: calc(19.0 * var(--u)); font-weight: 400; color: var(--nav); transition: color 0.2s; }
   .links a:hover { color: var(--ink); }
-  .links a:nth-child(1) { margin-right: calc(24.5 * var(--u)); }
-  .links a:nth-child(2) { margin-right: calc(23.5 * var(--u)); }
-  .links a:nth-child(3) { margin-right: calc(26.0 * var(--u)); }
-
-  .pill {
-    background: var(--pill); color: var(--pill-ink); font-weight: 500;
-    border-radius: 999px; display: flex; align-items: center; justify-content: center;
-    transition: transform 0.2s;
-  }
-  .pill:hover { transform: scale(1.03); }
-  .pill span { display: block; transform: translateY(calc(1 * var(--u))); }
-
-  .pill-nav {
-    right: calc(75.4 * var(--u)); top: calc(27 * var(--u));
-    width: calc(200 * var(--u)); height: calc(49 * var(--u));
-    font-size: calc(18.6 * var(--u));
-  }
 
   #burger { display: none; }
 
-  /* ═════════ HERO ═════════ */
-  .content-scroll { position: relative; z-index: 5; }
+  /* ═════════ REUSABLE PILLS & BUTTONS ═════════ */
+  .pill {
+    background: var(--pill); color: var(--pill-ink); font-weight: 600;
+    border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    transition: transform 0.2s, background 0.2s; padding: 1em 2em; font-size: 1rem;
+  }
+  .pill:hover { transform: scale(1.03); background: #e5e5e5; }
   
-  .hero-section { position: relative; width: 100%; height: 100vh; min-height: 800px; overflow: hidden; }
+  .ghost {
+    font-weight: 500; border-bottom: 1px solid var(--line); padding-bottom: 2px;
+    transition: border-color 0.3s, color 0.3s;
+  }
+  .ghost:hover { border-color: var(--ink); }
+
+  /* ═════════ HERO ═════════ */
+  .content-scroll { position: relative; z-index: 5; padding-bottom: 10vh; }
+  
+  .hero-section { position: relative; width: 100%; height: 100vh; min-height: 800px; }
   .hero-section > * { position: absolute; }
   
   .headline {
-    left: calc(75.5 * var(--u)); top: calc(230.5 * var(--u));
-    font-size: calc(64 * var(--h)); line-height: calc(80.5 / 71.6);
-    font-weight: 400; letter-spacing: calc(0.3 * var(--h));
-    color: var(--ink); white-space: nowrap;
+    left: calc(75.5 * var(--u)); top: calc(240 * var(--u));
+    font-size: calc(64 * var(--h)); line-height: 1.15;
+    font-weight: 400; letter-spacing: -0.01em; color: var(--ink);
   }
   .headline span { display: block; }
 
   .sub {
-    left: calc(75.5 * var(--u)); top: calc(230.5 * var(--u) + 189.0 * var(--h));
-    font-size: calc(20.7 * var(--h)); line-height: calc(23.5 / 20.7);
-    font-weight: 400; word-spacing: calc(1.8 * var(--h));
-    color: var(--muted); white-space: nowrap;
+    left: calc(75.5 * var(--u)); top: calc(240 * var(--u) + 170.0 * var(--h));
+    font-size: calc(20.7 * var(--h)); line-height: 1.5;
+    font-weight: 400; color: var(--muted);
   }
   .sub span { display: block; }
 
-  .pill-cta {
-    left: calc(74.9 * var(--u)); top: calc(230.5 * var(--u) + 264.5 * var(--h));
-    width: calc(220 * var(--h)); height: calc(50 * var(--h));
-    font-size: calc(20.6 * var(--h));
+  .actions {
+    position: absolute; left: calc(75.5 * var(--u)); top: calc(240 * var(--u) + 265 * var(--h));
+    display: flex; align-items: center; gap: calc(30 * var(--h));
   }
-  .ghost {
-    left: calc(74.9 * var(--u) + 250.6 * var(--h)); top: calc(230.5 * var(--u) + 279.5 * var(--h));
-    font-size: calc(20.6 * var(--h)); font-weight: 500;
-    letter-spacing: calc(0.12 * var(--h)); color: #fff;
-    transition: opacity 0.2s;
-  }
-  .ghost:hover { opacity: 0.7; }
+  .actions .pill { font-size: calc(18 * var(--h)); padding: calc(14 * var(--h)) calc(28 * var(--h)); }
+  .actions .ghost { font-size: calc(18 * var(--h)); border-bottom: 1px solid transparent; }
 
-  /* ═════════ INFO SECTIONS (SCROLL REVEAL) ═════════ */
-  .info-sections {
-    position: relative; padding: 10vh 10vw 15vh;
-    background: transparent; color: var(--ink);
+  /* ═════════ SPACIOUS INFO SECTIONS ═════════ */
+  .section-container {
+    max-width: 1100px; margin: 0 auto; padding: 15vh 5vw;
   }
-  .info-sections h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin-bottom: 3rem; }
-  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+  .section-container h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 4rem;
+  }
+
+  /* About */
+  .about-text {
+    font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.6; color: var(--muted); max-width: 800px;
+  }
+  .about-text b { color: var(--ink); font-weight: 500; }
+
+  /* Steps Grid */
+  .steps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 3rem; }
   .step-card {
-    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
-    padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+    padding: 3rem; border-radius: 24px; transition: transform 0.3s;
   }
-  .step-card span { font-size: 0.9rem; color: var(--muted); margin-bottom: 1rem; display: block; }
-  .step-card h3 { font-size: 1.4rem; font-weight: 500; margin-bottom: 1rem; }
-  .step-card p { font-size: 1rem; color: var(--muted); line-height: 1.6; }
+  .step-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.04); }
+  .step-card span { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; display: block; font-family: monospace; }
+  .step-card h3 { font-size: 1.6rem; font-weight: 500; margin-bottom: 1rem; }
+  .step-card p { font-size: 1.1rem; color: var(--muted); line-height: 1.6; }
 
-  /* ═════════ ANIMATIONS ═════════ */
-  @keyframes rise { from { opacity: 0; transform: translateY(calc(14 * var(--u))); } }
-  @keyframes riseNav { from { opacity: 0; transform: translate(-50%, calc(-50% + calc(14 * var(--u)))); } to { opacity: 1; transform: translate(-50%, -50%); } }
+  /* FAQ Accordion */
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+  details {
+    background: rgba(255,255,255,0.02); border: 1px solid var(--line);
+    border-radius: 20px; padding: 1.5rem 2rem; transition: background 0.3s;
+  }
+  details:hover { background: rgba(255,255,255,0.04); }
+  summary {
+    list-style: none; font-size: clamp(1.1rem, 2vw, 1.4rem); cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center; font-weight: 500;
+  }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: '+'; font-size: 1.8rem; font-weight: 300; transition: transform 0.3s; color: var(--muted); }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin-top: 1.5rem; color: var(--muted); font-size: 1.1rem; line-height: 1.6; padding-top: 1.5rem; border-top: 1px solid var(--line); }
 
-  .brand { animation: rise 0.8s cubic-bezier(.22, 1, .36, 1) both; }
-  .links { animation: riseNav 0.8s cubic-bezier(.22, 1, .36, 1) both; }
-  .pill-nav { animation: rise 0.8s cubic-bezier(.22, 1, .36, 1) both; }
-  .headline { animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.06s both; }
-  .sub { animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.14s both; }
-  .pill-cta, .ghost { animation: rise 0.9s cubic-bezier(.22, 1, .36, 1) 0.22s both; }
+  /* Contacts */
+  .contact-links { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2rem; }
+  .contact-link {
+    display: inline-flex; align-items: center; gap: 1rem;
+    padding: 1.2rem 2.5rem; background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+    border-radius: 999px; font-size: 1.2rem; transition: all 0.3s;
+  }
+  .contact-link:hover { background: var(--ink); color: var(--bg); transform: translateY(-3px); }
+  .contact-link svg { width: 24px; height: 24px; fill: currentColor; }
 
-  /* ═════════ MOBILE OVERRIDES ═════════ */
+  /* ═════════ MOBILE MENU ═════════ */
   .menu { display: none; }
-  @media (max-aspect-ratio: 11/10) {
-    .links, .pill-nav { display: none; }
+  @media (max-width: 900px) {
+    .links { display: none; }
     
     #burger {
-      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: calc(5 * var(--m));
-      position: absolute; right: calc(24 * var(--m)); top: calc(24 * var(--m));
-      width: calc(52 * var(--m)); height: calc(52 * var(--m));
-      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14);
-      backdrop-filter: blur(10px); border-radius: 999px; z-index: 100; pointer-events: auto;
+      display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 6px;
+      position: absolute; right: 24px; top: 24px; width: 56px; height: 56px;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--line);
+      backdrop-filter: blur(10px); border-radius: 50%; z-index: 100; pointer-events: auto;
     }
-    #burger i {
-      display: block; width: calc(20 * var(--m)); height: calc(1.5 * var(--m));
-      background: var(--ink); transition: transform 0.3s cubic-bezier(.22,1,.36,1);
-    }
-    body.is-open #burger i:nth-child(1) { transform: translateY(calc(3.25 * var(--m))) rotate(45deg); }
-    body.is-open #burger i:nth-child(2) { transform: translateY(calc(-3.25 * var(--m))) rotate(-45deg); }
+    #burger i { display: block; width: 22px; height: 2px; background: var(--ink); transition: transform 0.3s; }
+    body.is-open #burger i:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+    body.is-open #burger i:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
 
     .menu {
       display: block; position: fixed; inset: 0; z-index: 90;
-      background: linear-gradient(to bottom, rgba(5,5,5,0.8) 0%, #050505 100%);
-      backdrop-filter: blur(20px); opacity: 0; visibility: hidden; transition: opacity 0.42s, visibility 0.42s;
+      background: rgba(5,5,5,0.95); backdrop-filter: blur(20px);
+      opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
     }
     body.is-open .menu { opacity: 1; visibility: visible; }
-    .menu-inner { padding: calc(120 * var(--m)) calc(30 * var(--m)) 0; }
-    .menu-eyebrow { font-size: calc(14 * var(--m)); color: var(--muted); margin-bottom: calc(30 * var(--m)); opacity: 0; transform: translateY(calc(10 * var(--m))); transition: all 0.4s; }
-    .menu-list { list-style: none; display: flex; flex-direction: column; gap: calc(20 * var(--m)); }
-    .menu-list li { opacity: 0; transform: translateY(calc(10 * var(--m))); transition: all 0.4s; }
-    .menu-list a { display: flex; align-items: center; justify-content: space-between; font-size: max(25px, calc(31 * var(--m))); font-weight: 400; color: var(--ink); }
-    .menu-list a::after { content: ''; display: block; width: calc(8 * var(--m)); height: calc(8 * var(--m)); border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(-45deg); }
-    .menu-foot { margin-top: calc(60 * var(--m)); display: flex; flex-direction: column; gap: calc(20 * var(--m)); opacity: 0; transform: translateY(calc(10 * var(--m))); transition: all 0.4s; }
-    .menu-foot .pill { padding: calc(18 * var(--m)); font-size: calc(18 * var(--m)); }
-    .menu-foot .ghost { position: relative; left: 0; top: 0; text-align: center; display: block; font-size: calc(18 * var(--m)); }
+    .menu-inner { padding: 120px 30px 0; }
+    .menu-list { list-style: none; display: flex; flex-direction: column; gap: 30px; }
+    .menu-list a { font-size: 28px; color: var(--ink); display: block; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
     
-    body.is-open .menu-eyebrow { opacity: 1; transform: none; transition-delay: 0.06s; }
-    body.is-open .menu-list li:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.10s; }
-    body.is-open .menu-list li:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.16s; }
-    body.is-open .menu-list li:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.22s; }
-    body.is-open .menu-list li:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.28s; }
-    body.is-open .menu-foot { opacity: 1; transform: none; transition-delay: 0.34s; }
-
-    .brand { left: calc(24 * var(--m)); top: calc(28 * var(--m)); height: calc(43 * var(--m)); width: auto; gap: calc(10 * var(--m)); }
-    .brand-text { font-size: calc(22 * var(--m)); }
-    
-    .headline { left: calc(24 * var(--m)); top: calc(180 * var(--m)); white-space: normal; font-size: calc(52 * var(--m)); }
+    .brand { left: 24px; top: 28px; }
+    .headline { left: 24px; top: 150px; font-size: 42px; white-space: normal; padding-right: 20px;}
     .headline span { display: inline; }
-    .sub { left: calc(24 * var(--m)); top: calc(340 * var(--m)); white-space: normal; width: calc(100% - calc(48 * var(--m))); }
+    .sub { left: 24px; top: 300px; white-space: normal; padding-right: 20px;}
     .sub span { display: inline; }
-    .pill-cta { left: calc(24 * var(--m)); top: calc(480 * var(--m)); width: auto; padding: 0 30px; }
-    .ghost { left: calc(24 * var(--m)); top: calc(560 * var(--m)); }
-  }
-  @media (min-width: 600px) and (max-aspect-ratio: 11/10) {
-    .headline { font-size: calc(56 * var(--m)); }
-    .headline span { display: block; }
-    .sub span { display: block; }
+    .actions { left: 24px; top: 460px; flex-direction: column; align-items: flex-start; gap: 20px; }
+    
+    .section-container { padding: 10vh 24px; }
   }
 
-  /* ═════════ SIDE PHONE TRIGGER (DEMO) ═════════ */
-  .demo-trigger {
-    position: fixed; right: 0; top: 50%; transform: translateY(-50%);
-    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-right: none;
-    border-radius: 20px 0 0 20px; padding: 16px; backdrop-filter: blur(10px);
-    z-index: 50; display: flex; align-items: center; justify-content: center;
-    color: #fff; cursor: pointer; transition: background 0.3s, transform 0.2s;
-    animation: ring 4s infinite cubic-bezier(.22, 1, .36, 1);
+  /* ═════════ MANUAL QUIZ MODAL (REAL SURVEY) ═════════ */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px);
+    z-index: 300; display: flex; align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s; padding: 20px;
   }
-  .demo-trigger:hover { background: rgba(255,255,255,0.2); }
-  .demo-trigger svg { width: 32px; height: 32px; fill: currentColor; }
-  @keyframes ring {
-    0%, 80% { transform: translateY(-50%) rotate(0deg); }
-    82% { transform: translateY(-50%) rotate(10deg); }
-    84% { transform: translateY(-50%) rotate(-10deg); }
-    86% { transform: translateY(-50%) rotate(10deg); }
-    88% { transform: translateY(-50%) rotate(-10deg); }
-    90% { transform: translateY(-50%) rotate(0deg); }
-  }
+  .modal-overlay.is-active { opacity: 1; visibility: visible; }
   
-  @media (max-aspect-ratio: 11/10) {
-    .menu-foot .demo-trigger-mobile {
-      display: flex; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 999px; padding: calc(18 * var(--m)); color: #fff; align-items: center; justify-content: center; gap: 8px;
-      font-size: calc(18 * var(--m)); animation: ring-mob 4s infinite; margin-top: 10px;
-    }
-    .demo-trigger { display: none; }
+  .quiz-card {
+    background: #111; border: 1px solid var(--line); border-radius: 24px;
+    width: 100%; max-width: 600px; padding: 40px; position: relative;
+    transform: translateY(20px) scale(0.98); transition: transform 0.4s cubic-bezier(.22, 1, .36, 1);
   }
-  @keyframes ring-mob {
-    0%, 80% { transform: rotate(0deg); }
-    82% { transform: rotate(3deg); }
-    84% { transform: rotate(-3deg); }
-    86% { transform: rotate(3deg); }
-    88% { transform: rotate(-3deg); }
-    90% { transform: rotate(0deg); }
+  .modal-overlay.is-active .quiz-card { transform: translateY(0) scale(1); }
+  
+  .modal-close {
+    position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+    font-size: 24px; color: var(--muted); display: flex; align-items: center; justify-content: center;
+    border-radius: 50%; background: rgba(255,255,255,0.05); transition: background 0.2s, color 0.2s;
   }
+  .modal-close:hover { background: rgba(255,255,255,0.1); color: var(--ink); }
 
-  /* ═════════ iPHONE DEMO OVERLAY ═════════ */
+  .real-quiz-step { display: none; animation: fadeIn 0.4s forwards; }
+  .real-quiz-step.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+
+  .quiz-title { font-size: 1.8rem; font-weight: 500; margin-bottom: 2rem; line-height: 1.3; }
+  .quiz-opt {
+    width: 100%; text-align: left; padding: 1.2rem 1.5rem; margin-bottom: 1rem;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--line); border-radius: 16px;
+    font-size: 1.1rem; color: var(--ink); transition: background 0.2s, border-color 0.2s;
+  }
+  .quiz-opt:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.3); }
+  
+  .quiz-input {
+    width: 100%; background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+    border-radius: 16px; padding: 1.2rem 1.5rem; font-size: 1.1rem; color: var(--ink);
+    font-family: inherit; margin-bottom: 1.5rem; resize: none; transition: border-color 0.2s;
+  }
+  .quiz-input:focus { outline: none; border-color: var(--ink); }
+  
+  .quiz-footer { display: flex; justify-content: space-between; margin-top: 2rem; }
+  .btn-next { background: var(--ink); color: var(--bg); padding: 1rem 2rem; border-radius: 12px; font-weight: 600; font-size: 1.1rem; }
+
+  /* ═════════ AUTOMATED iPHONE DEMO OVERLAY ═════════ */
   .demo-stage {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.9); backdrop-filter: blur(25px);
-    z-index: 200; display: flex; align-items: center; justify-content: center;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.95); backdrop-filter: blur(25px);
+    z-index: 400; display: flex; align-items: center; justify-content: center;
     opacity: 0; visibility: hidden; transition: opacity 0.4s, visibility 0.4s;
   }
   .demo-stage.is-active { opacity: 1; visibility: visible; }
   .demo-close {
     position: absolute; top: 30px; right: 40px; width: 50px; height: 50px;
     display: flex; align-items: center; justify-content: center; color: #fff;
-    background: rgba(255,255,255,0.1); border-radius: 50%; border: 1px solid rgba(255,255,255,0.2);
-    font-size: 26px; cursor: pointer; transition: transform 0.2s, background 0.2s; z-index: 210;
+    background: rgba(255,255,255,0.1); border-radius: 50%; border: 1px solid var(--line);
+    font-size: 26px; cursor: pointer; transition: transform 0.2s, background 0.2s; z-index: 410;
   }
   .demo-close:hover { transform: scale(1.1); background: rgba(255,255,255,0.2); }
 
   .iphone-frame {
-    position: relative;
-    height: min(92vh, 920px);
-    width: calc(min(92vh, 920px) * (330/700));
+    position: relative; height: min(92vh, 920px); width: calc(min(92vh, 920px) * (330/700));
     background: #0f0f0f; border-radius: min(6vh, 55px);
     box-shadow: inset 0 0 0 2px #333, inset 0 0 0 8px #000, 0 40px 80px rgba(0,0,0,0.9);
     overflow: hidden; display: flex; flex-direction: column;
@@ -321,93 +307,40 @@
   }
   .demo-stage.is-active .iphone-frame { transform: translateY(0) scale(1); }
   
-  .dynamic-island {
-    position: absolute; top: min(1.5vh, 12px); left: 50%; transform: translateX(-50%);
-    width: 30%; height: min(3.5vh, 28px); background: #000; border-radius: 20px; z-index: 70;
-  }
-  
-  .iphone-screen {
-    position: absolute; inset: min(1vh, 8px); background: #111; border-radius: min(5vh, 47px); overflow: hidden;
-    display: flex; flex-direction: column; color: #fff; font-family: -apple-system, sans-serif;
-  }
-  
-  .status-bar {
-    display: flex; justify-content: space-between; padding: 5% 7% 0;
-    font-size: 14px; font-weight: 600; color: #fff; z-index: 10;
-  }
-
+  .dynamic-island { position: absolute; top: min(1.5vh, 12px); left: 50%; transform: translateX(-50%); width: 30%; height: min(3.5vh, 28px); background: #000; border-radius: 20px; z-index: 70; }
+  .iphone-screen { position: absolute; inset: min(1vh, 8px); background: #111; border-radius: min(5vh, 47px); overflow: hidden; display: flex; flex-direction: column; color: #fff; }
+  .status-bar { display: flex; justify-content: space-between; padding: 5% 7% 0; font-size: 14px; font-weight: 600; z-index: 10; }
   .iphone-content { position: relative; flex: 1; padding: 8% 6% 6%; overflow: hidden; }
   
-  .quiz-step { position: absolute; inset: 8% 6% 6%; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transform: translateX(20px); transition: all 0.4s; }
-  .quiz-step.active { opacity: 1; pointer-events: auto; transform: translateX(0); }
+  .demo-quiz-step { position: absolute; inset: 8% 6% 6%; display: flex; flex-direction: column; opacity: 0; pointer-events: none; transform: translateX(20px); transition: all 0.4s; }
+  .demo-quiz-step.active { opacity: 1; transform: translateX(0); }
   
-  .q-title { font-size: clamp(20px, 3vh, 26px); font-weight: 600; margin-bottom: 24px; line-height: 1.3; }
-  .opt-btn {
-    width: 100%; text-align: left; padding: 18px 20px; margin-bottom: 14px;
-    background: #1c1c1e; border: 1px solid #333; border-radius: 16px;
-    font-size: clamp(15px, 2vh, 18px); color: #fff; transition: background 0.2s, border-color 0.2s;
-  }
-  .opt-btn.selected { border-color: #fff; background: rgba(255,255,255,0.1); }
-  
-  .input-field {
-    width: 100%; background: #1c1c1e; border: 1px solid #555; border-radius: 16px;
-    padding: 18px 20px; font-size: clamp(15px, 2vh, 18px); color: #fff; margin-bottom: 16px;
-    font-family: inherit; resize: none; transition: opacity 0.3s;
-  }
-  .input-field:focus { outline: none; border-color: #fff; }
-  textarea.input-field { height: 160px; line-height: 1.4; }
-  
-  .submit-btn {
-    background: #fff; color: #000; font-weight: 600; font-size: clamp(16px, 2.2vh, 18px);
-    padding: 18px; border-radius: 16px; width: 100%; text-align: center;
-    margin-top: auto; margin-bottom: 20px; transition: opacity 0.3s;
-  }
+  .d-title { font-size: clamp(20px, 3vh, 26px); font-weight: 600; margin-bottom: 24px; line-height: 1.3; }
+  .d-opt { width: 100%; text-align: left; padding: 18px 20px; margin-bottom: 14px; background: #1c1c1e; border: 1px solid #333; border-radius: 16px; font-size: clamp(15px, 2vh, 18px); color: #fff; }
+  .d-opt.selected { border-color: #fff; background: rgba(255,255,255,0.1); }
+  .d-input { width: 100%; background: #1c1c1e; border: 1px solid #555; border-radius: 16px; padding: 18px 20px; font-size: clamp(15px, 2vh, 18px); color: #fff; margin-bottom: 16px; }
+  .d-submit { background: #fff; color: #000; font-weight: 600; padding: 18px; border-radius: 16px; width: 100%; text-align: center; margin-top: auto; margin-bottom: 20px; }
 
-  /* ═════════ NOTIFICATIONS & EMAIL ═════════ */
-  .notification {
-    position: absolute; top: -120px; left: 16px; right: 16px;
-    background: rgba(30,30,30,0.85); backdrop-filter: blur(15px);
-    border-radius: 20px; padding: 16px; display: flex; gap: 14px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.6); z-index: 50; transition: top 0.5s cubic-bezier(.22, 1, .36, 1);
-  }
+  .notification { position: absolute; top: -120px; left: 16px; right: 16px; background: rgba(30,30,30,0.85); backdrop-filter: blur(15px); border-radius: 20px; padding: 16px; display: flex; gap: 14px; z-index: 50; transition: top 0.5s; }
   .notification.show { top: 16px; }
-  .notif-icon { width: 40px; height: 40px; background: #fff; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-  .notif-icon svg { width: 22px; height: 22px; fill: #000; }
+  .notif-icon { width: 40px; height: 40px; background: #fff; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
   .notif-text h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
-  .notif-text p { font-size: 14px; color: #ddd; line-height: 1.3; }
+  .notif-text p { font-size: 14px; color: #ddd; }
 
-  .email-view {
-    position: absolute; inset: 0; background: #111; z-index: 40; display: flex; flex-direction: column;
-    transform: translateY(100%); transition: transform 0.5s cubic-bezier(.22, 1, .36, 1);
-  }
+  .email-view { position: absolute; inset: 0; background: #111; z-index: 40; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.5s; }
   .email-view.open { transform: translateY(0); }
   .email-header { padding: 15% 6% 6%; border-bottom: 1px solid #222; }
   .email-header h2 { font-size: 26px; margin-bottom: 8px; }
-  .email-header p { font-size: 16px; color: #aaa; }
   .email-body { flex: 1; padding: 6%; display: flex; flex-direction: column; }
   .email-msg { font-size: 17px; line-height: 1.5; margin-bottom: 30px; }
 
-  /* Full Screen Website Overlay */
-  .full-site-view {
-    position: absolute; inset: 0; z-index: 60; background: #000;
-    display: flex; flex-direction: column;
-    transform: translateY(100%); transition: transform 0.6s cubic-bezier(.22, 1, .36, 1);
-  }
+  .full-site-view { position: absolute; inset: 0; z-index: 60; background: #000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.6s; }
   .full-site-view.open { transform: translateY(0); }
-  .full-site-top-safe-area { height: min(6vh, 44px); width: 100%; background: #000; flex-shrink: 0; }
+  .full-site-top { height: min(6vh, 44px); width: 100%; background: #000; }
   .full-site-view iframe { width: 100%; flex: 1; border: none; background: #fff; border-radius: 0 0 min(5vh, 47px) min(5vh, 47px); }
 
-  /* Animated Cursor */
-  .demo-cursor {
-    position: absolute; width: 40px; height: 40px; z-index: 100;
-    pointer-events: none; opacity: 0;
-    transition: left 0.5s cubic-bezier(.22, 1, .36, 1), top 0.5s cubic-bezier(.22, 1, .36, 1), opacity 0.3s;
-  }
-  .demo-cursor::after {
-    content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 24px; height: 24px; background: rgba(255,255,255,0.8); border-radius: 50%;
-    box-shadow: 0 0 0 5px rgba(255,255,255,0.2); transition: transform 0.15s;
-  }
+  .demo-cursor { position: absolute; width: 40px; height: 40px; z-index: 100; opacity: 0; transition: left 0.5s, top 0.5s, opacity 0.3s; pointer-events: none;}
+  .demo-cursor::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 0 5px rgba(255,255,255,0.2); transition: transform 0.15s; }
   .demo-cursor.active { opacity: 1; }
   .demo-cursor.tap::after { transform: translate(-50%, -50%) scale(0.6); background: #fff; }
 
@@ -437,10 +370,9 @@
   <nav class="links" aria-label="Основное меню">
     <a href="#about">О нас</a>
     <a href="#features">Преимущества</a>
-    <a href="#faq">Вопросы</a>
+    <a href="#faq">Частые вопросы</a>
     <a href="#contact">Контакты</a>
   </nav>
-  <a href="#" class="pill pill-nav" onclick="openDemo(); return false;"><span>Начать работу</span></a>
   <button id="burger" aria-label="Меню" aria-expanded="false">
     <i></i><i></i>
   </button>
@@ -448,21 +380,12 @@
 
 <nav class="menu" id="menu">
   <div class="menu-inner">
-    <p class="menu-eyebrow">Меню</p>
     <ul class="menu-list">
       <li><a href="#about">О нас</a></li>
       <li><a href="#features">Преимущества</a></li>
-      <li><a href="#faq">Вопросы</a></li>
+      <li><a href="#faq">Частые вопросы</a></li>
       <li><a href="#contact">Контакты</a></li>
     </ul>
-    <div class="menu-foot">
-      <a href="#" class="pill" onclick="openDemo(); return false;"><span>Начать работу</span></a>
-      <a href="#" class="ghost" onclick="openDemo(); return false;">Смотреть демо</a>
-      <button class="demo-trigger-mobile" onclick="openDemo()">
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
-        Смотреть демо
-      </button>
-    </div>
   </div>
 </nav>
 
@@ -471,101 +394,177 @@
     <h1 class="headline"><span>Вы ставите задачу —</span> <span>мы устраняем рутину</span></h1>
     <p class="sub"><span>Анализируем ваши тяжелые и однообразные процессы,</span> <span>чтобы превратить их в элегантные автоматизированные решения.</span></p>
     
-    <a href="#" class="pill pill-cta" onclick="openDemo(); return false;"><span>Пройти анкету</span></a>
-    <a href="#" class="ghost" onclick="openDemo(); return false;">Смотреть демо</a>
+    <div class="actions">
+      <!-- Настоящая анкета для пользователя -->
+      <button class="pill" onclick="openRealQuiz()">Пройти анкету</button>
+      <!-- Запуск демонстрации -->
+      <button class="ghost" onclick="openDemo()">Смотреть демо</button>
+    </div>
   </section>
 
-  <section id="about" class="info-sections">
+  <!-- Секция: О нас -->
+  <section id="about" class="section-container">
+    <h2>О нас</h2>
+    <p class="about-text">
+      Мы создаем <b>razgruzKA</b> для тех, чье время стоит дорого. Мы сами проходили через хаос разрозненных таблиц, бесконечных чатов и утомительных отчетов, собираемых вручную по выходным.<br><br>
+      Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.
+    </p>
+  </section>
+
+  <!-- Секция: Преимущества (Шаги) -->
+  <section id="features" class="section-container">
     <h2>Как это работает</h2>
     <div class="steps-grid">
       <div class="step-card">
         <span>01</span>
-        <h3>Отвечаете на вопросы</h3>
-        <p>О своей роли и о том, что каждый день отнимает больше всего времени в вашей рутине.</p>
+        <h3>Заполняете анкету</h3>
+        <p>Короткий опрос о вашей роли и о том, какие именно рутинные задачи отнимают вашу энергию и время.</p>
       </div>
       <div class="step-card">
         <span>02</span>
-        <h3>Получаете чек-лист</h3>
-        <p>Сразу после короткой анкеты мы формируем приоритеты: что стоит автоматизировать первым делом.</p>
+        <h3>Получаете разбор</h3>
+        <p>Мы анализируем ваши ответы и формируем четкий чек-лист приоритетов для автоматизации.</p>
       </div>
       <div class="step-card">
         <span>03</span>
-        <h3>Присылаем решение</h3>
-        <p>Разбираем заявку вручную и предоставляем готовый инструмент под ключ.</p>
+        <h3>Внедряем решение</h3>
+        <p>Разрабатываем и передаем вам готовый цифровой инструмент под ключ, решающий вашу проблему.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- Секция: FAQ -->
+  <section id="faq" class="section-container">
+    <h2>Частые вопросы</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Сколько времени занимает разработка решения?</summary>
+        <p>Первичный анализ вашей анкеты и формирование чек-листа происходят в течение 1–2 дней. Само внедрение решения зависит от сложности процессов, но базовые инструменты (боты, дашборды, трекеры) мы запускаем уже в первую неделю.</p>
+      </details>
+      <details>
+        <summary>Вы работаете только со студентами?</summary>
+        <p>Нет, изначально мы помогали студентам и старостам, но сейчас наши алгоритмы и подходы отлично масштабируются для малого бизнеса, фрилансеров, менеджеров проектов и любых специалистов, погрязших в операционке.</p>
+      </details>
+      <details>
+        <summary>Нужно ли мне уметь программировать?</summary>
+        <p>Абсолютно нет. Вы получаете готовый интуитивный интерфейс, который сразу готов к работе. Вся техническая магия и настройка архитектуры остается на нашей стороне.</p>
+      </details>
+      <details>
+        <summary>Это платно?</summary>
+        <p>Заполнение анкеты и получение базового аудита ваших процессов — полностью бесплатно. Разработка кастомных программных решений и полноценных инфраструктур оценивается индивидуально после аудита.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- Секция: Контакты -->
+  <section id="contact" class="section-container">
+    <h2>Свяжитесь с нами</h2>
+    <p class="about-text">Готовы избавиться от рутины или хотите обсудить нестандартную задачу? Напишите напрямую:</p>
+    
+    <div class="contact-links">
+      <a href="mailto:isievemil@gmail.com" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        isievemil@gmail.com
+      </a>
+      <a href="https://t.me/isievemil" target="_blank" class="contact-link">
+        <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.888-.662 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        @isievemil
+      </a>
     </div>
   </section>
 </div>
 
-<!-- Desktop Phone Trigger -->
-<button class="demo-trigger" onclick="openDemo()" aria-label="Запустить демо">
-  <svg viewBox="0 0 24 24"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 0 0-1.02.24l-2.2 2.2a15.045 15.045 0 0 1-6.59-6.59l2.2-2.21a.96.96 0 0 0 .25-1.02A11.36 11.36 0 0 1 8.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
-</button>
+<!-- ========================================== -->
+<!-- НАСТОЯЩАЯ АНКЕТА (Для пользователя)        -->
+<!-- ========================================== -->
+<div class="modal-overlay" id="realQuizStage">
+  <button class="modal-close" onclick="closeRealQuiz()">✕</button>
+  <div class="quiz-card">
+    
+    <!-- Шаг 1 -->
+    <div class="real-quiz-step active" id="rq-step1">
+      <div class="quiz-title">Чем вы занимаетесь?</div>
+      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Я студент / староста</button>
+      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Свой бизнес / стартап</button>
+      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Фрилансер / специалист</button>
+      <button class="quiz-opt" onclick="document.getElementById('rq-other').style.display='block'">Другое</button>
+      
+      <div id="rq-other" style="display:none; margin-top: 15px;">
+        <input type="text" class="quiz-input" placeholder="Впишите вашу роль...">
+        <button class="btn-next" style="width: 100%" onclick="nextRealQuiz('rq-step2')">Далее</button>
+      </div>
+    </div>
 
-<!-- DEMO OVERLAY (iPhone Simulator) -->
+    <!-- Шаг 2 -->
+    <div class="real-quiz-step" id="rq-step2">
+      <div class="quiz-title">Что отнимает больше всего времени?</div>
+      <textarea class="quiz-input" style="height: 120px;" placeholder="Опишите процессы, которые приходится делать вручную и которые вас раздражают..."></textarea>
+      <div class="quiz-footer">
+        <button class="btn-next" style="background: transparent; border: 1px solid var(--line); color: var(--ink);" onclick="nextRealQuiz('rq-step1')">Назад</button>
+        <button class="btn-next" onclick="nextRealQuiz('rq-step3')">Готово</button>
+      </div>
+    </div>
+
+    <!-- Шаг 3 (Завершение) -->
+    <div class="real-quiz-step" id="rq-step3">
+      <div class="quiz-title">Спасибо за ответы!</div>
+      <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem;">Оставьте вашу почту или Telegram, чтобы мы прислали вам аудит ваших процессов и предложили решение.</p>
+      <input type="text" class="quiz-input" placeholder="Email или @telegram">
+      <button class="btn-next" style="width: 100%" onclick="closeRealQuiz(); alert('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');">Отправить заявку</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================================== -->
+<!-- АВТОМАТИЧЕСКОЕ ДЕМО (iPhone Simulator)     -->
+<!-- ========================================== -->
 <div class="demo-stage" id="demoStage">
   <button class="demo-close" onclick="closeDemo()">✕</button>
   <div class="iphone-frame">
     <div class="iphone-screen" id="iphoneScreen">
       <div class="dynamic-island"></div>
-      <div class="status-bar">
-        <span>9:41</span>
-        <span>●●●</span>
-      </div>
+      <div class="status-bar"><span>9:41</span><span>●●●</span></div>
       
       <div class="iphone-content">
         <!-- Q1 -->
-        <div class="quiz-step active" id="step1">
-          <div class="q-title">Кто вы?</div>
-          <button class="opt-btn">Студент</button>
-          <button class="opt-btn">Преподаватель</button>
-          <button class="opt-btn" id="btnOther">Другое</button>
-          
-          <div id="otherWrap" style="opacity: 0; display: none; transition: opacity 0.3s;">
-            <input type="text" id="inputOther" class="input-field" placeholder="Введите вашу роль...">
-            <button class="submit-btn" id="btnNext1">Далее</button>
+        <div class="demo-quiz-step active" id="d-step1">
+          <div class="d-title">Кто вы?</div>
+          <div class="d-opt">Студент</div>
+          <div class="d-opt">Преподаватель</div>
+          <div class="d-opt" id="d-btnOther">Другое</div>
+          <div id="d-otherWrap" style="opacity: 0; display: none; transition: opacity 0.3s;">
+            <input type="text" id="d-inputOther" class="d-input" placeholder="Введите вашу роль...">
+            <div class="d-submit" id="d-btnNext1">Далее</div>
           </div>
         </div>
-
         <!-- Q2 -->
-        <div class="quiz-step" id="step2">
-          <div class="q-title">Что отнимает время?</div>
-          <textarea id="inputProblem" class="input-field" placeholder="Подробно опишите рутину..."></textarea>
-          <button class="submit-btn" id="btnSubmit">Отправить</button>
+        <div class="demo-quiz-step" id="d-step2">
+          <div class="d-title">Что отнимает время?</div>
+          <textarea id="d-inputProblem" class="d-input" style="height: 160px;"></textarea>
+          <div class="d-submit" id="d-btnSubmit">Отправить</div>
         </div>
-
         <!-- Loading -->
-        <div class="quiz-step" id="stepDone" style="justify-content: center; align-items: center; text-align: center;">
-          <div class="q-title" id="doneText">Анализируем...</div>
+        <div class="demo-quiz-step" id="d-stepDone" style="justify-content: center; align-items: center; text-align: center;">
+          <div class="d-title" id="d-doneText">Анализируем...</div>
         </div>
       </div>
 
-      <!-- Notification -->
       <div class="notification" id="demoNotif">
-        <div class="notif-icon">
-          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        </div>
-        <div class="notif-text">
-          <h4>Входящие</h4>
-          <p>Ваша проблема решена — открыть</p>
-        </div>
+        <div class="notif-icon"><svg viewBox="0 0 24 24" style="width:20px;fill:#000;"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+        <div class="notif-text"><h4>Входящие</h4><p>Ваша проблема решена — открыть</p></div>
       </div>
 
-      <!-- Email View -->
       <div class="email-view" id="emailView">
-        <div class="email-header">
-          <h2>Решение найдено</h2>
-          <p>От: razgruzKA</p>
-        </div>
+        <div class="email-header"><h2>Решение найдено</h2><p style="color:#aaa;">От: razgruzKA</p></div>
         <div class="email-body">
           <div class="email-msg">Ваша персональная система готова. Нажмите кнопку, чтобы запустить приложение.</div>
-          <button id="siteLinkBtn" class="submit-btn" style="background: #007aff; color: #fff;">Открыть StaroSTATT</button>
+          <div id="siteLinkBtn" class="d-submit" style="background: #007aff; color: #fff;">Открыть StaroSTATT</div>
         </div>
       </div>
 
-      <!-- Full Screen Website Overlay -->
       <div class="full-site-view" id="fullSiteView">
-        <div class="full-site-top-safe-area"></div>
+        <div class="full-site-top"></div>
         <iframe src="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" title="StaroSTATT App"></iframe>
       </div>
 
@@ -575,39 +574,44 @@
 </div>
 
 <script>
-  /* Скролл эффект для затемнения фона */
+  /* Скролл эффект */
   window.addEventListener('scroll', () => {
     let scrollVal = Math.min(window.scrollY / window.innerHeight, 1);
     document.body.style.setProperty('--scroll-progress', scrollVal);
   });
 
+  /* Мобильное меню */
   const burger = document.getElementById('burger');
   const menu = document.getElementById('menu');
-
   function toggleMenu() {
     const isOpen = document.body.classList.toggle('is-open');
     burger.setAttribute('aria-expanded', isOpen);
   }
   burger.addEventListener('click', toggleMenu);
-  
-  menu.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A') toggleMenu();
-  });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth / window.innerHeight > 1.1 && document.body.classList.contains('is-open')) {
-      toggleMenu();
-    }
-  });
+  menu.addEventListener('click', (e) => { if (e.target.tagName === 'A') toggleMenu(); });
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (document.body.classList.contains('is-open')) toggleMenu();
       closeDemo();
+      closeRealQuiz();
     }
   });
 
-  /* ═════════ DEMO LOGIC ═════════ */
+  /* ═════════ ЛОГИКА НАСТОЯЩЕЙ АНКЕТЫ ═════════ */
+  function openRealQuiz() {
+    document.getElementById('realQuizStage').classList.add('is-active');
+  }
+  function closeRealQuiz() {
+    document.getElementById('realQuizStage').classList.remove('is-active');
+    setTimeout(() => { nextRealQuiz('rq-step1'); }, 400); // сброс на первый шаг
+  }
+  function nextRealQuiz(stepId) {
+    document.querySelectorAll('.real-quiz-step').forEach(el => el.classList.remove('active'));
+    document.getElementById(stepId).classList.add('active');
+  }
+
+  /* ═════════ ЛОГИКА АВТОМАТИЧЕСКОГО ДЕМО ═════════ */
   let demoActive = false;
   let demoTimer = null;
   const sleep = ms => new Promise(r => { demoTimer = setTimeout(r, ms); });
@@ -624,15 +628,15 @@
   }
 
   function resetDemoState() {
-    document.querySelectorAll('.quiz-step').forEach(el => el.classList.remove('active'));
-    document.getElementById('step1').classList.add('active');
+    document.querySelectorAll('.demo-quiz-step').forEach(el => el.classList.remove('active'));
+    document.getElementById('d-step1').classList.add('active');
     
-    document.getElementById('btnOther').classList.remove('selected');
-    document.getElementById('otherWrap').style.display = 'none';
-    document.getElementById('otherWrap').style.opacity = '0';
-    document.getElementById('inputOther').value = '';
-    document.getElementById('inputProblem').value = '';
-    document.getElementById('doneText').innerText = 'Отправка...';
+    document.getElementById('d-btnOther').classList.remove('selected');
+    document.getElementById('d-otherWrap').style.display = 'none';
+    document.getElementById('d-otherWrap').style.opacity = '0';
+    document.getElementById('d-inputOther').value = '';
+    document.getElementById('d-inputProblem').value = '';
+    document.getElementById('d-doneText').innerText = 'Отправка...';
     
     document.getElementById('demoNotif').classList.remove('show');
     document.getElementById('emailView').classList.remove('open');
@@ -690,48 +694,48 @@
     cursor.classList.add('active');
     
     // 1. Клик на "Другое"
-    await moveCursor('btnOther');
+    await moveCursor('d-btnOther');
     await tap();
-    document.getElementById('btnOther').classList.add('selected');
+    document.getElementById('d-btnOther').classList.add('selected');
     
-    const otherWrap = document.getElementById('otherWrap');
+    const otherWrap = document.getElementById('d-otherWrap');
     otherWrap.style.display = 'block';
     await sleep(50);
     otherWrap.style.opacity = '1';
     await sleep(400);
     
     // 2. Ввод своей роли
-    await moveCursor('inputOther');
+    await moveCursor('d-inputOther');
     await tap();
     cursor.classList.remove('active');
-    await typeText('inputOther', 'Я староста');
+    await typeText('d-inputOther', 'Я староста');
     
     cursor.classList.add('active');
-    await moveCursor('btnNext1');
+    await moveCursor('d-btnNext1');
     await tap();
     
     // Переход дальше
-    document.getElementById('step1').classList.remove('active');
-    document.getElementById('step2').classList.add('active');
+    document.getElementById('d-step1').classList.remove('active');
+    document.getElementById('d-step2').classList.add('active');
     await sleep(600);
 
     // 3. Ввод проблемы
-    await moveCursor('inputProblem');
+    await moveCursor('d-inputProblem');
     await tap();
     cursor.classList.remove('active');
-    await typeText('inputProblem', 'очень много трачу времени на то чтобы отмечать носить с собой журнал и потом делать аналитику о посещаемости и отправлять куратору группы');
+    await typeText('d-inputProblem', 'очень много трачу времени на то чтобы отмечать носить с собой журнал и потом делать аналитику о посещаемости и отправлять куратору группы');
     
     cursor.classList.add('active');
-    await moveCursor('btnSubmit');
+    await moveCursor('d-btnSubmit');
     await tap();
 
     // 4. Отправка
-    document.getElementById('step2').classList.remove('active');
-    document.getElementById('stepDone').classList.add('active');
+    document.getElementById('d-step2').classList.remove('active');
+    document.getElementById('d-stepDone').classList.add('active');
     cursor.classList.remove('active');
     
     await sleep(1500);
-    document.getElementById('doneText').innerText = 'Успешно отправлено ✓';
+    document.getElementById('d-doneText').innerText = 'Успешно отправлено ✓';
     await sleep(1000);
     
     // 5. Уведомление
@@ -755,7 +759,7 @@
     await tap();
     cursor.classList.remove('active');
 
-    // 8. Сайт StaroSTATT
+    // 8. Сайт
     document.getElementById('fullSiteView').classList.add('open');
   }
 </script>
