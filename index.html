@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>razgruzKA — упростим вашу рутину</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&display=swap" rel="stylesheet">
+<!--
+  НАСТРОЙКА ОТПРАВКИ ПОЧТЫ (EmailJS, бесплатно):
+  1. Зарегистрируйся на https://www.emailjs.com (бесплатный план — 200 писем/мес)
+  2. Подключи свою почту как "Email Service" → получишь SERVICE_ID
+  3. Создай "Email Template" с полями: {{role}}, {{answers}}, {{hours}}, {{comment}}, {{email}}
+     → получишь TEMPLATE_ID
+  4. В Account → General найди Public Key
+  5. Впиши все три значения в константы EMAILJS_* внизу файла (секция <script>)
+-->
+<style>
+:root{
+  --bg:#0b0b0a; --bg-elev:#131211; --ink:#f3f1ec; --muted:#9a978f;
+  --line:rgba(243,241,236,.10); --pill:#f3f1ec; --pill-ink:#0b0b0a;
+  --accent:#8fa789; --ease:cubic-bezier(.22,1,.36,1);
+  --font-display:'Fraunces', Georgia, serif;
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg); color:var(--ink); font-family:'Manrope',system-ui,-apple-system,sans-serif;
+  font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+a{color:inherit; text-decoration:none}
+h1,h2,h3{font-family:var(--font-display); font-weight:500; letter-spacing:-.01em}
+button{font-family:inherit; cursor:pointer; border:none; background:none; color:inherit}
+
+.pill{display:inline-flex; align-items:center; justify-content:center; gap:.5em;
+  background:var(--pill); color:var(--pill-ink); border-radius:999px; padding:.9em 1.7em;
+  font-size:.95rem; font-weight:600; transition:transform .35s var(--ease), box-shadow .35s var(--ease)}
+.pill:hover{transform:translateY(-2px) scale(1.02); box-shadow:0 10px 30px -10px rgba(243,241,236,.35)}
+.pill:active{transform:translateY(0) scale(.97); transition:transform .12s var(--ease)}
+.pill-lg{padding:1.05em 2.1em; font-size:1.02rem}
+.ghost{font-weight:500; color:var(--ink); border-bottom:1px solid var(--line); padding-bottom:2px;
+  transition:border-color .3s var(--ease), opacity .3s var(--ease)}
+.ghost:hover{border-color:var(--ink)}
+
+/* ---------- Nav ---------- */
+.nav{position:fixed; top:0; left:0; right:0; z-index:40; display:flex; align-items:center;
+  justify-content:space-between; padding:1.6rem clamp(1.4rem,4vw,4rem);
+  backdrop-filter:blur(10px); background:linear-gradient(to bottom, rgba(11,11,10,.75), rgba(11,11,10,0));
+  opacity:0; animation:rise .8s var(--ease) forwards}
+.logo{font-family:var(--font-display); font-weight:600; font-size:1.2rem; letter-spacing:-.01em}
+.logo-accent{font-style:italic; color:var(--accent)}
+.nav-links{display:flex; gap:2.2rem; font-size:.92rem; color:var(--muted)}
+.nav-links a:hover{color:var(--ink)}
+@media (max-width:760px){ .nav-links{display:none} }
+
+/* ---------- Hero ---------- */
+.hero{position:relative; min-height:100vh; display:flex; align-items:center; overflow:hidden}
+.hero-video{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0}
+.hero-fade{position:absolute; inset:0; z-index:1;
+  background:linear-gradient(180deg, rgba(11,11,10,.5) 0%, rgba(11,11,10,.72) 55%, var(--bg) 97%)}
+.hero-content{position:relative; z-index:2; padding:0 clamp(1.4rem,4vw,4rem); max-width:760px}
+.hero h1{font-size:clamp(2.3rem,4.6vw + .8rem,4rem); line-height:1.08; opacity:0;
+  animation:rise .9s var(--ease) .1s forwards}
+.hero .sub{margin-top:1.4rem; max-width:440px; color:var(--muted); font-size:1.05rem;
+  line-height:1.55; opacity:0; animation:rise .9s var(--ease) .22s forwards}
+.actions{margin-top:2.2rem; display:flex; align-items:center; gap:1.6rem; flex-wrap:wrap;
+  opacity:0; animation:rise .9s var(--ease) .34s forwards}
+@keyframes rise{from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:translateY(0)}}
+
+/* ---------- Reveal-on-scroll sections ---------- */
+.reveal{opacity:0; filter:blur(8px); transform:translateY(0);
+  transition:opacity .8s var(--ease), filter .8s var(--ease)}
+.reveal.in{opacity:1; filter:blur(0)}
+
+.how, .cases{padding:7rem clamp(1.4rem,4vw,4rem)}
+.how h2, .cases h2{font-size:clamp(1.6rem,2.6vw,2.2rem); margin-bottom:2.6rem}
+.steps{display:grid; grid-template-columns:repeat(3,1fr); gap:2.4rem}
+@media (max-width:820px){ .steps{grid-template-columns:1fr} }
+.step .num{font-size:.85rem; color:var(--muted)}
+.step h3{font-size:1.1rem; margin:.7rem 0 .5rem}
+.step p{color:var(--muted); font-size:.94rem; line-height:1.5; max-width:32ch}
+
+.case-card{border-top:1px solid var(--line); padding-top:1.6rem; max-width:560px}
+.case-card h3{font-size:1.2rem; margin-bottom:.6rem}
+.case-card p{color:var(--muted); font-size:.96rem; line-height:1.6; margin-bottom:1rem}
+
+footer{padding:3rem clamp(1.4rem,4vw,4rem); border-top:1px solid var(--line); color:var(--muted); font-size:.9rem}
+footer a{border-bottom:1px solid var(--line)}
+
+/* ---------- Quiz overlay ---------- */
+.quiz-overlay{position:fixed; inset:0; z-index:50; display:flex; align-items:center; justify-content:center;
+  background:rgba(6,6,5,.86); backdrop-filter:blur(6px); padding:1.4rem;
+  opacity:0; visibility:hidden; transition:opacity .4s var(--ease), visibility 0s linear .4s}
+.quiz-overlay.open{opacity:1; visibility:visible; transition:opacity .4s var(--ease)}
+.quiz-card{position:relative; width:100%; max-width:560px; background:var(--bg-elev);
+  border:1px solid var(--line); border-radius:20px; padding:2.4rem clamp(1.4rem,4vw,2.6rem) 2.2rem;
+  transform:scale(.96) translateY(10px); transition:transform .45s var(--ease)}
+.quiz-overlay.open .quiz-card{transform:scale(1) translateY(0)}
+.close{position:absolute; top:1.3rem; right:1.3rem; color:var(--muted); font-size:1.1rem;
+  transition:color .25s var(--ease), transform .25s var(--ease)}
+.close:hover{color:var(--ink); transform:rotate(90deg)}
+.progress{height:2px; background:var(--line); border-radius:2px; margin-bottom:2rem; overflow:hidden}
+.progress-fill{height:100%; width:0%; background:var(--accent); transition:width .5s var(--ease)}
+
+.quiz-body{min-height:280px; display:flex; flex-direction:column}
+.q-wrap{opacity:0; transform:translateX(16px); transition:opacity .38s var(--ease), transform .38s var(--ease)}
+.q-wrap.show{opacity:1; transform:translateX(0)}
+.q-wrap.back{transform:translateX(-16px)}
+.q-title{font-family:var(--font-display); font-size:1.28rem; font-weight:500; line-height:1.35; margin-bottom:1.6rem}
+.q-hint{color:var(--muted); font-size:.9rem; margin:-1.2rem 0 1.4rem}
+
+.opt-grid{display:flex; flex-direction:column; gap:.7rem}
+.opt{text-align:left; border:1px solid var(--line); border-radius:12px; padding:1em 1.2em;
+  font-size:.96rem; transition:border-color .25s var(--ease), background .25s var(--ease), transform .2s var(--ease)}
+.opt:hover{border-color:rgba(243,241,236,.3); transform:translateX(3px)}
+.opt.selected{border-color:var(--accent); background:rgba(143,167,137,.1)}
+
+textarea, input[type=email]{width:100%; background:transparent; border:1px solid var(--line);
+  border-radius:12px; padding:.9em 1.1em; color:var(--ink); font-family:inherit; font-size:.96rem;
+  transition:border-color .25s var(--ease)}
+textarea{min-height:100px; resize:vertical}
+textarea:focus, input:focus{outline:none; border-color:var(--accent)}
+textarea::placeholder, input::placeholder{color:var(--muted)}
+
+.q-nav{display:flex; justify-content:space-between; align-items:center; margin-top:2rem}
+.q-back{color:var(--muted); font-size:.9rem; transition:color .25s var(--ease)}
+.q-back:hover{color:var(--ink)}
+.q-back:disabled{opacity:0; pointer-events:none}
+
+.checklist{list-style:none; display:flex; flex-direction:column; gap:.7rem; margin:0 0 1.6rem}
+.checklist li{display:flex; gap:.7em; font-size:.94rem; line-height:1.5; opacity:0;
+  transform:translateY(8px); animation:rise .5s var(--ease) forwards}
+.checklist li b{color:var(--accent); font-weight:700}
+.result-note{color:var(--muted); font-size:.92rem; line-height:1.55; margin-bottom:1.6rem}
+
+.demo-section{padding:6rem clamp(1.4rem,4vw,4rem) 2rem}
+.demo-section h2{font-size:clamp(1.6rem,2.6vw,2.2rem); margin-bottom:1rem}
+.demo-copy{color:var(--muted); max-width:46ch; line-height:1.55; margin-bottom:1.8rem}
+
+.demo-card{max-width:340px; display:flex; flex-direction:column; align-items:center; padding-top:2.6rem}
+.phone-frame{position:relative; width:260px; height:534px; background:#0b0b0a; border-radius:44px;
+  padding:10px; box-shadow:0 0 0 2px rgba(243,241,236,.14), 0 30px 60px -20px rgba(0,0,0,.6)}
+.phone-notch{position:absolute; top:18px; left:50%; transform:translateX(-50%); width:80px; height:22px;
+  background:#000; border-radius:14px; z-index:5}
+.phone-screen{position:relative; width:100%; height:100%; background:#131211; border-radius:34px; overflow:hidden}
+.status-bar{display:flex; justify-content:space-between; padding:.9rem 1.3rem .2rem; font-size:.7rem; color:var(--muted)}
+.status-icons{letter-spacing:2px}
+.phone-content{padding:.6rem 1.2rem 1.2rem; height:calc(100% - 30px); overflow:hidden; display:flex; flex-direction:column}
+.phone-content .q-title{font-size:.98rem; margin-bottom:1rem}
+.phone-content .opt-grid{gap:.5rem}
+.phone-content .opt{padding:.7em .9em; font-size:.82rem}
+.phone-content textarea{font-size:.8rem; min-height:80px}
+.cursor-dot{position:absolute; width:16px; height:16px; border-radius:50%; background:var(--accent);
+  box-shadow:0 0 0 4px rgba(143,167,137,.25); top:50%; left:50%; transform:translate(-50%,-50%);
+  transition:left .6s var(--ease), top .6s var(--ease); z-index:10; opacity:0}
+.cursor-dot.on{opacity:1}
+.cursor-dot.tap{animation:tapPing .5s var(--ease)}
+@keyframes tapPing{0%{transform:translate(-50%,-50%) scale(1)} 40%{transform:translate(-50%,-50%) scale(.55)} 100%{transform:translate(-50%,-50%) scale(1)}}
+.notif-banner{background:rgba(243,241,236,.08); border:1px solid var(--line); border-radius:14px; padding:.8rem 1rem;
+  margin-top:1.4rem; opacity:0; transform:translateY(-14px); transition:opacity .5s var(--ease), transform .5s var(--ease)}
+.notif-banner.show{opacity:1; transform:translateY(0)}
+.notif-banner b{display:block; font-size:.82rem; margin-bottom:.15rem}
+.notif-banner span{font-size:.76rem; color:var(--muted)}
+.email-head{font-size:.78rem; color:var(--muted); margin-bottom:.6rem; line-height:1.5}
+.email-head b{color:var(--ink)}
+.phone-content iframe{flex:1; width:100%; border:none; border-radius:10px; margin-top:.4rem}
+.demo-controls{margin-top:1.4rem}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+  .hero-video{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="logo">razgruz<span class="logo-accent">KA</span></div>
+  <nav class="nav-links">
+    <a href="#how">Как это работает</a>
+    <a href="#cases">Кейсы</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+  <button class="pill" onclick="openQuiz()">Пройти анкету</button>
+</header>
+
+<main>
+  <section class="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+      <source src="media/hero-bg.mp4" type="video/mp4">
+    </video>
+    <div class="hero-fade"></div>
+    <div class="hero-content">
+      <h1>Найдём, что упростить<br>в вашей рутине</h1>
+      <p class="sub">Короткая анкета — 4 минуты. Сразу получите чек-лист, а мы вручную разберём ответы и пришлём решение на почту.</p>
+      <div class="actions">
+        <button class="pill pill-lg" onclick="openQuiz()">Пройти анкету</button>
+        <a href="#how" class="ghost">Как это работает</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-section reveal">
+    <h2>Как это выглядит на практике</h2>
+    <p class="demo-copy">Реальный сценарий: староста проходит анкету — и решение прилетает ему на почту.</p>
+    <button class="pill" onclick="openDemo()">Смотреть демо</button>
+  </section>
+
+  <section id="how" class="how reveal">
+    <h2>Как это работает</h2>
+    <div class="steps">
+      <div class="step"><span class="num">01</span><h3>Отвечаете на вопросы</h3>
+        <p>О своей роли и о том, что каждый день отнимает время</p></div>
+      <div class="step"><span class="num">02</span><h3>Получаете чек-лист</h3>
+        <p>Сразу после анкеты — с приоритетами, что упростить в первую очередь</p></div>
+      <div class="step"><span class="num">03</span><h3>Присылаем решение</h3>
+        <p>Разбираем заявку вручную и пишем на почту, как именно упростить рутину</p></div>
+    </div>
+  </section>
+
+  <section id="cases" class="cases reveal">
+    <h2>Кейсы</h2>
+    <div class="case-card">
+      <h3>StaroSTATT</h3>
+      <p>Веб-приложение для старост групп: журнал посещаемости, сводки по предметам и отчёт для куратора одним кликом — вместо ручных таблиц и напоминаний в чате.</p>
+      <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" class="ghost">Открыть сайт</a>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  Связаться напрямую: <a href="mailto:isievemil@gmail.com">isievemil@gmail.com</a>
+</footer>
+
+<section class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-card">
+    <button class="close" onclick="closeQuiz()" aria-label="Закрыть">✕</button>
+    <div class="progress"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="quiz-body" id="quizBody"></div>
+  </div>
+</section>
+
+<section class="quiz-overlay" id="demoOverlay">
+  <div class="quiz-card demo-card">
+    <button class="close" onclick="closeDemo()" aria-label="Закрыть">✕</button>
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="status-bar"><span>9:41</span><span class="status-icons">●●●</span></div>
+        <div class="phone-content" id="demoContent"></div>
+        <div class="cursor-dot" id="demoCursor"></div>
+      </div>
+    </div>
+    <div class="demo-controls"><button class="ghost" id="demoReplay" onclick="playDemo()" style="display:none">Повторить</button></div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+/* ===== EmailJS — вставь свои значения ===== */
+const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+if (window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY") emailjs.init(EMAILJS_PUBLIC_KEY);
+
+/* ===== Данные анкеты ===== */
+const ROLES = [
+  {id:'student', label:'Студент'},
+  {id:'freelance', label:'Фрилансер'},
+  {id:'business', label:'Малый бизнес'},
+  {id:'other', label:'Другое'}
+];
+
+const QUESTIONS = {
+  student: [
+    {q:'Что отнимает больше всего времени?', opts:[
+      {t:'Расписание и дедлайны', tip:'Собрать все пары и дедлайны в одном календаре с напоминаниями'},
+      {t:'Конспекты и подготовка к парам', tip:'Завести общее хранилище конспектов на всю группу'},
+      {t:'Я староста — журнал и отчёты куратору', tip:'Автоматизировать журнал посещаемости и сводки для куратора'},
+      {t:'Подработка совмещённая с учёбой', tip:'Выстроить единый график под учёбу и подработку'}
+    ]},
+    {q:'Как справляетесь с этим сейчас?', opts:[
+      {t:'Держу всё в голове', tip:'Внедрить систему напоминаний вместо расчёта на память'},
+      {t:'Заметки в телефоне или на бумаге', tip:'Перенести заметки в один удобный инструмент'},
+      {t:'Рабочая информация теряется в чатах', tip:'Вынести важное из переписок в отдельное место'},
+      {t:'Пробовал(а) приложения — не прижились', tip:'Подобрать инструмент именно под ваш процесс'}
+    ]}
+  ],
+  freelance: [
+    {q:'Что чаще всего выбивает из графика?', opts:[
+      {t:'Поиск новых клиентов', tip:'Настроить регулярный, а не хаотичный поток заявок'},
+      {t:'Счета, оплаты, документы', tip:'Автоматизировать выставление счетов и учёт оплат'},
+      {t:'Учёт времени по проектам', tip:'Внедрить простой тайм-трекинг без лишней рутины'},
+      {t:'Переписка и согласования', tip:'Сократить количество созвонов и правок через чёткий бриф'}
+    ]},
+    {q:'Как сейчас ведёте учёт проектов?', opts:[
+      {t:'В голове / на глаз', tip:'Завести единый трекер проектов и дедлайнов'},
+      {t:'В таблице, которую не успеваю обновлять', tip:'Упростить таблицу до 3–4 нужных полей'},
+      {t:'Разные заметки под разные проекты', tip:'Свести всё в одну систему'},
+      {t:'Есть система, но она сложная', tip:'Упростить существующий процесс, а не менять его целиком'}
+    ]}
+  ],
+  business: [
+    {q:'Что забирает больше всего времени в неделю?', opts:[
+      {t:'Учёт заказов и склада', tip:'Внедрить простой учёт заказов без Excel-хаоса'},
+      {t:'Соцсети и реклама', tip:'Составить контент-план, который не требует ежедневного участия'},
+      {t:'Бухгалтерия и отчётность', tip:'Автоматизировать рутинную часть отчётности'},
+      {t:'Координация сотрудников', tip:'Настроить единый канал задач вместо разрозненных чатов'}
+    ]},
+    {q:'Где сейчас хранится вся рабочая информация?', opts:[
+      {t:'В Excel/Google Таблицах', tip:'Упростить таблицы до нужного минимума и автоматизировать часть полей'},
+      {t:'В переписках с сотрудниками', tip:'Вынести задачи из переписок в отдельную систему'},
+      {t:'В голове у меня одного', tip:'Задокументировать процессы, чтобы не всё держалось на вас'},
+      {t:'Есть CRM/система, но неудобная', tip:'Настроить существующую систему под реальные задачи'}
+    ]}
+  ],
+  other: [
+    {q:'Какая рутинная задача раздражает больше всего?', opts:[
+      {t:'Слишком много ручной работы', tip:'Найти, что из этого можно автоматизировать в первую очередь'},
+      {t:'Информация разбросана по разным местам', tip:'Собрать всё важное в одном инструменте'},
+      {t:'Нет чёткой системы вообще', tip:'Выстроить минимальную рабочую систему с нуля'},
+      {t:'Система есть, но не работает', tip:'Упростить то, что уже есть, вместо новой сложной системы'}
+    ]},
+    {q:'Сколько времени в среднем уходит на это в день?', opts:[
+      {t:'Меньше 30 минут', tip:'Даже небольшая рутина за месяц складывается в часы — стоит автоматизировать'},
+      {t:'30–60 минут', tip:'Заметная часть дня уходит впустую — есть что упростить'},
+      {t:'1–2 часа', tip:'Это уже существенная нагрузка, приоритет — разгрузить в первую очередь'},
+      {t:'Больше 2 часов', tip:'Такая рутина требует отдельного решения, а не мелких правок'}
+    ]}
+  ]
+};
+
+const HOURS_Q = {q:'Сколько часов в неделю в целом уходит на рутину, которую хотелось бы упростить?', opts:[
+  {t:'Меньше 3 часов', tip:'Небольшая, но регулярная рутина — легко упростить малой правкой'},
+  {t:'3–7 часов', tip:'Это почти целый рабочий день в неделю — есть смысл упрощать системно'},
+  {t:'7–15 часов', tip:'Заметная нагрузка — стоит пересобрать процесс, а не латать по частям'},
+  {t:'Больше 15 часов', tip:'Это уже вторая работа — здесь нужно решение под ключ'}
+]};
+
+/* ===== Состояние ===== */
+let state = {role:null, answers:[], hours:null, comment:'', email:''};
+let step = 0; // 0=role,1..n = role questions,hours,comment,result
+let steps = [];
+let dir = 'fwd';
+
+function buildSteps(){
+  steps = ['role'];
+  if(state.role) QUESTIONS[state.role].forEach((_,i)=>steps.push('rq'+i));
+  steps.push('hours','comment','result');
+}
+buildSteps();
+
+function openQuiz(){
+  document.getElementById('quizOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  render();
+}
+function closeQuiz(){
+  document.getElementById('quizOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function render(){
+  const body = document.getElementById('quizBody');
+  const key = steps[step];
+  document.getElementById('progressFill').style.width = (step/(steps.length-1)*100)+'%';
+
+  let html = '';
+  if(key==='role'){
+    html = `<div class="q-title">Кто вы?</div>
+      <div class="opt-grid">${ROLES.map(r=>`<button class="opt" onclick="pickRole('${r.id}')">${r.label}</button>`).join('')}</div>`;
+  } else if(key.startsWith('rq')){
+    const idx = parseInt(key.slice(2));
+    const q = QUESTIONS[state.role][idx];
+    html = `<div class="q-title">${q.q}</div>
+      <div class="opt-grid">${q.opts.map((o,i)=>`<button class="opt ${state.answers[idx]===i?'selected':''}" onclick="pickAnswer(${idx},${i})">${o.t}</button>`).join('')}</div>
+      ${navRow(true)}`;
+  } else if(key==='hours'){
+    html = `<div class="q-title">${HOURS_Q.q}</div>
+      <div class="opt-grid">${HOURS_Q.opts.map((o,i)=>`<button class="opt ${state.hours===i?'selected':''}" onclick="pickHours(${i})">${o.t}</button>`).join('')}</div>
+      ${navRow(true)}`;
+  } else if(key==='comment'){
+    html = `<div class="q-title">Что раздражает больше всего?</div>
+      <div class="q-hint">Своими словами, необязательно — но так решение будет точнее</div>
+      <textarea id="commentInput" placeholder="Например: трачу вечер по воскресеньям на сводку для куратора...">${state.comment}</textarea>
+      ${navRow(false, true)}`;
+  } else if(key==='result'){
+    const items = generateChecklist();
+    html = `<div class="q-title">Ваш чек-лист</div>
+      <ul class="checklist">${items.map((t,i)=>`<li style="animation-delay:${i*0.09}s"><b>—</b> ${t}</li>`).join('')}</ul>
+      <div class="result-note">Оставьте почту — мы вручную разберём вашу заявку и пришлём конкретное решение в течение 2 рабочих дней.</div>
+      <input type="email" id="emailInput" placeholder="you@mail.com" value="${state.email}" required>
+      <div class="q-nav">
+        <button class="q-back" onclick="goBack()">Назад</button>
+        <button class="pill" onclick="submitForm()">Отправить заявку</button>
+      </div>`;
+  }
+
+  body.innerHTML = `<div class="q-wrap" id="qwrap">${html}</div>`;
+  requestAnimationFrame(()=>{
+    const w = document.getElementById('qwrap');
+    if(dir==='back') w.classList.add('back');
+    requestAnimationFrame(()=>{ w.classList.remove('back'); w.classList.add('show'); });
+  });
+
+  if(key==='comment'){
+    document.getElementById('commentInput').addEventListener('input', e=> state.comment = e.target.value);
+  }
+}
+
+function navRow(showNext, requireText){
+  return `<div class="q-nav">
+    <button class="q-back" onclick="goBack()" ${step===0?'disabled':''}>Назад</button>
+    ${showNext ? '' : `<button class="pill" onclick="goNext()">Далее</button>`}
+  </div>`;
+}
+
+function pickRole(id){
+  state.role = id; state.answers = [];
+  buildSteps();
+  goNext();
+}
+function pickAnswer(qIdx, optIdx){
+  state.answers[qIdx] = optIdx;
+  setTimeout(goNext, 180);
+}
+function pickHours(i){
+  state.hours = i;
+  setTimeout(goNext, 180);
+}
+
+function goNext(){ dir='fwd'; step = Math.min(step+1, steps.length-1); render(); }
+function goBack(){ dir='back'; step = Math.max(step-1, 0); render(); }
+
+function generateChecklist(){
+  const items = [];
+  if(state.role){
+    QUESTIONS[state.role].forEach((q,i)=>{
+      if(state.answers[i]!==undefined) items.push(q.opts[state.answers[i]].tip);
+    });
+  }
+  if(state.hours!==null) items.push(HOURS_Q.opts[state.hours].tip);
+  return items;
+}
+
+function submitForm(){
+  const emailInput = document.getElementById('emailInput');
+  if(!emailInput.checkValidity()){ emailInput.focus(); return; }
+  state.email = emailInput.value;
+
+  const params = {
+    role: ROLES.find(r=>r.id===state.role)?.label || state.role,
+    answers: generateChecklist().join(' | '),
+    hours: state.hours!==null ? HOURS_Q.opts[state.hours].t : '',
+    comment: state.comment,
+    email: state.email
+  };
+
+  const body = document.getElementById('quizBody');
+  body.innerHTML = `<div class="q-title">Отправляем...</div>`;
+
+  const finish = (ok)=>{
+    document.getElementById('progressFill').style.width='100%';
+    body.innerHTML = ok
+      ? `<div class="q-title">Заявка отправлена</div>
+         <div class="result-note">Мы разберём её вручную и пришлём решение на ${state.email} в течение 2 рабочих дней.</div>
+         <button class="pill" onclick="closeQuiz()">Готово</button>`
+      : `<div class="q-title">Не получилось отправить</div>
+         <div class="result-note">Попробуйте ещё раз или напишите напрямую на isievemil@gmail.com</div>
+         <button class="pill" onclick="render()">Назад к чек-листу</button>`;
+  };
+
+  if(window.emailjs && EMAILJS_PUBLIC_KEY !== "YOUR_PUBLIC_KEY"){
+    emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params).then(()=>finish(true)).catch(()=>finish(false));
+  } else {
+    console.warn('EmailJS не настроен — заполните EMAILJS_* константы в начале скрипта.', params);
+    finish(true); // демо-режим, пока не подключён EmailJS
+  }
+}
+
+/* ===== Scroll reveal ===== */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); });
+}, {threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ===== Демо на телефоне ===== */
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function cursorTo(el, cursor, screen){
+  const s = screen.getBoundingClientRect(), r = el.getBoundingClientRect();
+  cursor.style.left = (r.left + r.width/2 - s.left) + 'px';
+  cursor.style.top = (r.top + r.height/2 - s.top) + 'px';
+}
+async function tapAt(el, cursor, screen){
+  cursor.classList.add('on');
+  cursorTo(el, cursor, screen);
+  await sleep(650);
+  cursor.classList.add('tap');
+  await sleep(300);
+  cursor.classList.remove('tap');
+}
+async function typeInto(el, text){
+  el.value = '';
+  for(let i=0;i<text.length;i++){ el.value += text[i]; await sleep(22); }
+}
+
+function openDemo(){
+  document.getElementById('demoOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  playDemo();
+}
+function closeDemo(){
+  document.getElementById('demoOverlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+async function playDemo(){
+  const content = document.getElementById('demoContent');
+  const cursor = document.getElementById('demoCursor');
+  const screen = content.parentElement;
+  document.getElementById('demoReplay').style.display = 'none';
+  cursor.classList.remove('on','tap');
+
+  content.innerHTML = `<div class="q-title">Вы староста группы?</div>
+    <div class="opt-grid"><button class="opt" id="dOpt1">Да</button><button class="opt" id="dOpt2">Нет</button></div>`;
+  await sleep(500);
+  await tapAt(document.getElementById('dOpt1'), cursor, screen);
+  document.getElementById('dOpt1').classList.add('selected');
+  await sleep(500);
+
+  content.innerHTML = `<div class="q-title">Сколько времени уходит на журнал и аналитику посещаемости?</div>
+    <div class="opt-grid"><button class="opt" id="dOpt3">Меньше часа в неделю</button><button class="opt" id="dOpt4">Больше 2 часов в неделю</button></div>`;
+  await sleep(400);
+  await tapAt(document.getElementById('dOpt4'), cursor, screen);
+  document.getElementById('dOpt4').classList.add('selected');
+  await sleep(500);
+
+  content.innerHTML = `<div class="q-title">Расскажите подробнее</div><textarea id="dText"></textarea>
+    <button class="pill" id="dSend" style="margin-top:1rem; align-self:flex-start">Отправить</button>`;
+  await sleep(300);
+  await typeInto(document.getElementById('dText'),
+    'Каждый день вручную отмечаю присутствующих, а потом отдельно свожу статистику посещаемости для отчёта куратору — на это уходит время каждую неделю.');
+  await sleep(400);
+  await tapAt(document.getElementById('dSend'), cursor, screen);
+  cursor.classList.remove('on');
+  content.innerHTML = `<div class="q-title">Заявка отправлена ✓</div>`;
+  await sleep(900);
+
+  content.innerHTML = `<div class="notif-banner" id="dNotif"><b>Почта</b><span>Ваше решение готово — открыть письмо</span></div>`;
+  requestAnimationFrame(()=>document.getElementById('dNotif').classList.add('show'));
+  await sleep(700);
+  await tapAt(document.getElementById('dNotif'), cursor, screen);
+  cursor.classList.remove('on');
+
+  content.innerHTML = `<div class="email-head"><b>razgruzKA</b> · Ваше решение для старост<br>Посмотрите, как это уже работает:</div>
+    <iframe src="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" loading="lazy"></iframe>`;
+  document.getElementById('demoReplay').style.display = 'inline-flex';
+}
+
+document.addEventListener('keydown', e=>{ if(e.key==='Escape'){ closeQuiz(); closeDemo(); } });
+</script>
+</body>
+</html>
