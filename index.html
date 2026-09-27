@@ -159,6 +159,17 @@
     font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 4rem;
   }
 
+  /* Scroll-reveal переходы */
+  .reveal {
+    opacity: 0; transform: translateY(46px);
+    transition: opacity 0.9s cubic-bezier(.22,1,.36,1), transform 0.9s cubic-bezier(.22,1,.36,1);
+    will-change: opacity, transform;
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
   /* About */
   .about-text {
     font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.6; color: var(--muted); max-width: 800px;
@@ -606,6 +617,12 @@
 </div>
 
 <script>
+  /* Фикс: браузер иногда сам восстанавливает старую позицию скролла при открытии —
+     принудительно открываем страницу с самого верха */
+  if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+  window.scrollTo(0, 0);
+  window.addEventListener('load', () => window.scrollTo(0, 0));
+
   /* Скролл эффект: максимальное затемнение фона до 95% */
   window.addEventListener('scroll', () => {
     let scrollVal = Math.min(window.scrollY / (window.innerHeight * 0.5), 0.95);
@@ -629,6 +646,26 @@
       closeRealQuiz();
     }
   });
+
+  /* ═════════ ПЛАВНОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ПРИ СКРОЛЛЕ ═════════ */
+  (function () {
+    const items = document.querySelectorAll(
+      '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link'
+    );
+    items.forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = ((i % 4) * 0.08) + 's';
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    items.forEach(el => io.observe(el));
+  })();
 
   /* ═════════ ЛОГИКА НАСТОЯЩЕЙ АНКЕТЫ ═════════ */
   let rqRole = '';
