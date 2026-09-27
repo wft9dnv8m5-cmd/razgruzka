@@ -54,7 +54,15 @@
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
+    /* Базовое мягкое свечение за всем текстом */
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
   }
+  
+  /* Усиленное свечение для заголовков и акцентов */
+  h1, h2, h3, .brand-text, .intro-logo span {
+    text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+  }
+
   a { text-decoration: none; color: inherit; cursor: pointer; }
   button { border: none; background: none; font-family: inherit; cursor: pointer; color: inherit; }
 
@@ -91,10 +99,11 @@
   /* ═════════ СТАРТОВАЯ АНИМАЦИЯ ЛОГОТИПА ═════════ */
   .intro-overlay {
     position: fixed; inset: 0; z-index: 1000;
-    background: var(--bg);
-    transition: opacity 0.9s ease;
+    background-color: var(--bg);
+    transition: background-color 1s ease, opacity 0.5s ease;
   }
-  .intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+  .intro-overlay.bg-fade { background-color: transparent; pointer-events: none; }
+  .intro-overlay.fade-out { opacity: 0; }
   .intro-logo {
     position: fixed; left: 50%; top: 50%;
     transform: translate(-50%, -50%) scale(2.6);
@@ -103,10 +112,12 @@
   }
   .intro-logo svg { height: calc(48.5 * var(--u)); width: auto; display: block; }
   .intro-logo span { font-size: calc(26 * var(--u)); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  
   .intro-overlay.shrink .intro-logo {
     left: calc(160 * var(--u)); top: calc(51 * var(--u));
     transform: translate(-50%, -50%) scale(1);
   }
+  
   @media (prefers-reduced-motion: reduce) {
     .intro-overlay { display: none; }
   }
@@ -138,8 +149,9 @@
     background: var(--pill); color: var(--pill-ink); font-weight: 600;
     border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
     transition: transform 0.2s, background 0.2s; padding: 1em 2em; font-size: 1rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); /* Свечение кнопки */
   }
-  .pill:hover { transform: scale(1.03); background: #e5e5e5; }
+  .pill:hover { transform: scale(1.03); background: #e5e5e5; box-shadow: 0 0 25px rgba(255, 255, 255, 0.25); }
   
   .ghost {
     font-weight: 500; border-bottom: 1px solid var(--line); padding-bottom: 2px;
@@ -199,15 +211,12 @@
   }
   .about-text b { color: var(--ink); font-weight: 500; }
 
-  /* Steps Grid (2 on top, 1 centered below) */
-  .steps-grid { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr; 
-    gap: 3rem; 
-  }
+  /* Steps Grid */
+  .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
   .step-card {
     background: rgba(255,255,255,0.02); border: 1px solid var(--line);
     padding: 3rem; border-radius: 24px; transition: transform 0.3s;
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.01);
   }
   .step-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.04); }
   .step-card span { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; display: block; font-family: monospace; }
@@ -215,9 +224,7 @@
   .step-card p { font-size: 1.1rem; color: var(--muted); line-height: 1.6; }
   
   .step-card:nth-child(3) {
-    grid-column: 1 / -1; 
-    justify-self: center; 
-    width: calc(50% - 1.5rem);
+    grid-column: 1 / -1; justify-self: center; width: calc(50% - 1.5rem);
   }
 
   /* FAQ Accordion */
@@ -398,6 +405,7 @@
 </head>
 <body>
 
+<!-- Анимация логотипа с новой логикой -->
 <div class="intro-overlay" id="introOverlay">
   <div class="intro-logo">
     <svg viewBox="0 0 31.5 48.5">
@@ -600,7 +608,6 @@
       <div class="status-bar"><span>9:41</span><span>●●●</span></div>
       
       <div class="iphone-content">
-        <!-- Q1 -->
         <div class="demo-quiz-step active" id="d-step1">
           <div class="d-title">Кто вы?</div>
           <div class="d-opt">Студент</div>
@@ -611,13 +618,11 @@
             <div class="d-submit" id="d-btnNext1">Далее</div>
           </div>
         </div>
-        <!-- Q2 -->
         <div class="demo-quiz-step" id="d-step2">
           <div class="d-title">Что отнимает время?</div>
           <textarea id="d-inputProblem" class="d-input" style="height: 160px;"></textarea>
           <div class="d-submit" id="d-btnSubmit">Отправить</div>
         </div>
-        <!-- Loading -->
         <div class="demo-quiz-step" id="d-stepDone" style="justify-content: center; align-items: center; text-align: center;">
           <div class="d-title" id="d-doneText">Анализируем...</div>
         </div>
@@ -654,34 +659,41 @@
 </div>
 
 <script>
-  /* Фикс: браузер иногда сам восстанавливает старую позицию скролла при открытии —
-     принудительно открываем страницу с самого верха */
   if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
   window.scrollTo(0, 0);
   window.addEventListener('load', () => window.scrollTo(0, 0));
 
-  /* Стартовая анимация: логотип в центре → затухая, уходит на своё место в шапке */
+  /* Обновленная логика старта: висит 3.5 секунды, затем возвращается в шапку */
   (function () {
     const overlay = document.getElementById('introOverlay');
     if (!overlay) return;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduceMotion) { overlay.remove(); return; }
+    
     window.addEventListener('load', () => {
+      // Через 3.5 секунды делаем фон прозрачным и запускаем полет в угол
       setTimeout(() => {
         overlay.classList.add('shrink');
-        overlay.classList.add('fade-out');
-      }, 900);
-      setTimeout(() => { overlay.remove(); }, 900 + 1000);
+        overlay.classList.add('bg-fade');
+      }, 3500);
+      
+      // Незадолго до конца полета гасим прозрачность самого лого, чтобы обнажить настоящий
+      setTimeout(() => { 
+        overlay.classList.add('fade-out'); 
+      }, 3500 + 800); 
+      
+      // Удаляем из DOM
+      setTimeout(() => { 
+        overlay.remove(); 
+      }, 3500 + 1300);
     });
   })();
 
-  /* Скролл эффект: максимальное затемнение фона до 95% */
   window.addEventListener('scroll', () => {
     let scrollVal = Math.min(window.scrollY / (window.innerHeight * 0.6), 0.6);
     document.body.style.setProperty('--scroll-progress', scrollVal);
   });
 
-  /* Мобильное меню */
   const burger = document.getElementById('burger');
   const menu = document.getElementById('menu');
   function toggleMenu() {
@@ -699,7 +711,7 @@
     }
   });
 
-  /* ═════════ ПЛАВНОЕ ПОЯВЛЕНИЕ СЕКЦИЙ ПРИ СКРОЛЛЕ ═════════ */
+  /* ═════════ ПЛАВНОЕ ПОЯВЛЕНИЕ ═════════ */
   (function () {
     const items = document.querySelectorAll(
       '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link'
@@ -719,7 +731,7 @@
     items.forEach(el => io.observe(el));
   })();
 
-  /* ═════════ ЛОГИКА НАСТОЯЩЕЙ АНКЕТЫ ═════════ */
+  /* ═════════ НАСТОЯЩАЯ АНКЕТА ═════════ */
   let rqRole = '';
   function openRealQuiz() {
     document.getElementById('realQuizStage').classList.add('is-active');
@@ -761,7 +773,7 @@
     nextRealQuiz('rq-step4');
   }
 
-  /* ═════════ ЛОГИКА АВТОМАТИЧЕСКОГО ДЕМО ═════════ */
+  /* ═════════ АВТОМАТИЧЕСКОЕ ДЕМО ═════════ */
   let demoActive = false;
   let demoTimer = null;
   const sleep = ms => new Promise(r => { demoTimer = setTimeout(r, ms); });
@@ -776,44 +788,34 @@
     clearTimeout(demoTimer);
     resetDemoState();
   }
-
   function resetDemoState() {
     document.querySelectorAll('.demo-quiz-step').forEach(el => el.classList.remove('active'));
     document.getElementById('d-step1').classList.add('active');
-    
     document.getElementById('d-btnOther').classList.remove('selected');
     document.getElementById('d-otherWrap').style.display = 'none';
     document.getElementById('d-otherWrap').style.opacity = '0';
     document.getElementById('d-inputOther').value = '';
     document.getElementById('d-inputProblem').value = '';
     document.getElementById('d-doneText').innerText = 'Отправка...';
-    
     document.getElementById('demoNotif').classList.remove('show');
     document.getElementById('emailView').classList.remove('open');
     document.getElementById('fullSiteView').classList.remove('open');
-    
     const cursor = document.getElementById('cursor');
     cursor.classList.remove('active', 'tap');
     cursor.style.left = '50%'; cursor.style.top = '90%';
   }
-
   async function moveCursor(elId, screenOffsetTop = 0) {
     if (!demoActive) return;
     const el = document.getElementById(elId);
     const cursor = document.getElementById('cursor');
     const screen = document.getElementById('iphoneScreen');
-    
     const elRect = el.getBoundingClientRect();
     const scRect = screen.getBoundingClientRect();
-    
     const targetX = (elRect.left - scRect.left) + (elRect.width / 2);
     const targetY = (elRect.top - scRect.top) + (elRect.height / 2) + screenOffsetTop;
-    
-    cursor.style.left = `${targetX}px`;
-    cursor.style.top = `${targetY}px`;
+    cursor.style.left = `${targetX}px`; cursor.style.top = `${targetY}px`;
     await sleep(650);
   }
-
   async function tap() {
     if (!demoActive) return;
     const cursor = document.getElementById('cursor');
@@ -822,7 +824,6 @@
     cursor.classList.remove('tap');
     await sleep(200);
   }
-
   async function typeText(elId, text) {
     if (!demoActive) return;
     const el = document.getElementById(elId);
@@ -834,119 +835,98 @@
     }
     await sleep(400);
   }
-
   async function runDemoSequence() {
-    demoActive = true;
-    resetDemoState();
+    demoActive = true; resetDemoState();
     const cursor = document.getElementById('cursor');
     
-    await sleep(800);
-    cursor.classList.add('active');
-    
-    // 1. Клик на "Другое"
-    await moveCursor('d-btnOther');
-    await tap();
+    await sleep(800); cursor.classList.add('active');
+    await moveCursor('d-btnOther'); await tap();
     document.getElementById('d-btnOther').classList.add('selected');
     
     const otherWrap = document.getElementById('d-otherWrap');
-    otherWrap.style.display = 'block';
-    await sleep(50);
-    otherWrap.style.opacity = '1';
-    await sleep(400);
+    otherWrap.style.display = 'block'; await sleep(50);
+    otherWrap.style.opacity = '1'; await sleep(400);
     
-    // 2. Ввод своей роли
-    await moveCursor('d-inputOther');
-    await tap();
+    await moveCursor('d-inputOther'); await tap();
     cursor.classList.remove('active');
     await typeText('d-inputOther', 'Я староста');
     
     cursor.classList.add('active');
-    await moveCursor('d-btnNext1');
-    await tap();
+    await moveCursor('d-btnNext1'); await tap();
     
-    // Переход дальше
     document.getElementById('d-step1').classList.remove('active');
     document.getElementById('d-step2').classList.add('active');
     await sleep(600);
 
-    // 3. Ввод проблемы
-    await moveCursor('d-inputProblem');
-    await tap();
+    await moveCursor('d-inputProblem'); await tap();
     cursor.classList.remove('active');
     await typeText('d-inputProblem', 'очень много трачу времени на то чтобы отмечать носить с собой журнал и потом делать аналитику о посещаемости и отправлять куратору группы');
     
     cursor.classList.add('active');
-    await moveCursor('d-btnSubmit');
-    await tap();
+    await moveCursor('d-btnSubmit'); await tap();
 
-    // 4. Отправка
     document.getElementById('d-step2').classList.remove('active');
     document.getElementById('d-stepDone').classList.add('active');
     cursor.classList.remove('active');
     
-    await sleep(1500);
-    document.getElementById('d-doneText').innerText = 'Успешно отправлено ✓';
+    await sleep(1500); document.getElementById('d-doneText').innerText = 'Успешно отправлено ✓';
     await sleep(1000);
     
-    // 5. Уведомление
     const notif = document.getElementById('demoNotif');
     notif.classList.add('show');
     
-    await sleep(800);
-    cursor.classList.add('active');
-    await moveCursor('demoNotif', 30);
-    await tap();
+    await sleep(800); cursor.classList.add('active');
+    await moveCursor('demoNotif', 30); await tap();
     cursor.classList.remove('active');
     
-    // 6. Письмо
     notif.classList.remove('show');
     document.getElementById('emailView').classList.add('open');
     await sleep(1000);
 
-    // 7. Клик по ссылке
     cursor.classList.add('active');
-    await moveCursor('siteLinkBtn');
-    await tap();
+    await moveCursor('siteLinkBtn'); await tap();
     cursor.classList.remove('active');
 
-    // 8. Сайт
     document.getElementById('fullSiteView').classList.add('open');
   }
 </script>
 
 <script>
-  /* ═════════ ФОНОВАЯ АНИМАЦИЯ (canvas, вместо внешнего видео) ═════════ */
+  /* ═════════ ОБНОВЛЕННАЯ ФОНОВАЯ АНИМАЦИЯ (Звезды и динамика) ═════════ */
   (function () {
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
-    let w, h, particles, glowDots;
+    let w, h, particles, glowDots, shootingStars = [];
 
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     }
+    
     function initParticles() {
-      particles = Array.from({ length: 130 }, () => ({
+      // Увеличено количество звезд и добавлено больше вариативности в их размеры и яркость
+      particles = Array.from({ length: 300 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: Math.random() * 1.7 + 0.4,
-        vx: (Math.random() - 0.5) * 0.15,
-        vy: (Math.random() - 0.5) * 0.15,
-        a: Math.random() * 0.55 + 0.15,
+        r: Math.random() * 2.2 + 0.2,
+        vx: (Math.random() - 0.5) * 0.1,
+        vy: (Math.random() - 0.5) * 0.1,
+        a: Math.random() * 0.7 + 0.1,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.04 + 0.005
+      }));
+      glowDots = Array.from({ length: 25 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 4 + 2,
+        vx: (Math.random() - 0.5) * 0.08,
+        vy: (Math.random() - 0.5) * 0.08,
+        a: Math.random() * 0.25 + 0.05,
         phase: Math.random() * Math.PI * 2,
         speed: Math.random() * 0.02 + 0.01
       }));
-      glowDots = Array.from({ length: 18 }, () => ({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        r: Math.random() * 3 + 2,
-        vx: (Math.random() - 0.5) * 0.06,
-        vy: (Math.random() - 0.5) * 0.06,
-        a: Math.random() * 0.2 + 0.08,
-        phase: Math.random() * Math.PI * 2,
-        speed: Math.random() * 0.015 + 0.008
-      }));
     }
+    
     window.addEventListener('resize', resize);
     resize();
     initParticles();
@@ -955,39 +935,44 @@
       ctx.clearRect(0, 0, w, h);
       const t = Date.now() * 0.00005;
 
-      const g1x = w * 0.3 + Math.sin(t) * w * 0.1;
-      const g1y = h * 0.35 + Math.cos(t * 1.3) * h * 0.1;
-      const grad1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, w * 0.4);
-      grad1.addColorStop(0, 'rgba(130,130,140,0.16)');
+      // Динамичные градиенты на фоне
+      const g1x = w * 0.3 + Math.sin(t) * w * 0.15;
+      const g1y = h * 0.35 + Math.cos(t * 1.3) * h * 0.15;
+      const grad1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, w * 0.45);
+      grad1.addColorStop(0, 'rgba(130,130,140,0.12)');
       grad1.addColorStop(1, 'rgba(5,5,5,0)');
       ctx.fillStyle = grad1;
       ctx.fillRect(0, 0, w, h);
 
-      const g2x = w * 0.7 + Math.cos(t * 0.8) * w * 0.12;
-      const g2y = h * 0.6 + Math.sin(t * 1.1) * h * 0.1;
-      const grad2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, w * 0.35);
-      grad2.addColorStop(0, 'rgba(90,90,100,0.13)');
+      const g2x = w * 0.7 + Math.cos(t * 0.8) * w * 0.18;
+      const g2y = h * 0.6 + Math.sin(t * 1.1) * h * 0.15;
+      const grad2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, w * 0.4);
+      grad2.addColorStop(0, 'rgba(90,90,100,0.1)');
       grad2.addColorStop(1, 'rgba(5,5,5,0)');
       ctx.fillStyle = grad2;
       ctx.fillRect(0, 0, w, h);
 
-      ctx.fillStyle = '#ffffff';
       const now = Date.now() * 0.001;
+      
+      // Отрисовка обычных звезд с сильным мерцанием
+      ctx.fillStyle = '#ffffff';
       particles.forEach(p => {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
         if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-        const twinkle = 0.55 + 0.45 * Math.sin(now * p.speed * 10 + p.phase);
-        ctx.globalAlpha = p.a * twinkle;
+        const twinkle = 0.4 + 0.6 * Math.sin(now * p.speed * 15 + p.phase);
+        ctx.globalAlpha = Math.max(0, p.a * twinkle);
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
         ctx.fill();
       });
+      
+      // Крупные размытые пятна (Ambient glow)
       glowDots.forEach(p => {
         p.x += p.vx; p.y += p.vy;
-        if (p.x < -20) p.x = w + 20; if (p.x > w + 20) p.x = -20;
-        if (p.y < -20) p.y = h + 20; if (p.y > h + 20) p.y = -20;
-        const twinkle = 0.55 + 0.45 * Math.sin(now * p.speed * 10 + p.phase);
+        if (p.x < -30) p.x = w + 30; if (p.x > w + 30) p.x = -30;
+        if (p.y < -30) p.y = h + 30; if (p.y > h + 30) p.y = -30;
+        const twinkle = 0.5 + 0.5 * Math.sin(now * p.speed * 10 + p.phase);
         const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
         glow.addColorStop(0, `rgba(255,255,255,${p.a * twinkle})`);
         glow.addColorStop(1, 'rgba(255,255,255,0)');
@@ -996,6 +981,38 @@
         ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2);
         ctx.fill();
       });
+
+      // Логика падающих звезд (Shooting stars) для особой динамики
+      if (Math.random() < 0.015) { // Шанс появления падающей звезды
+        shootingStars.push({
+          x: Math.random() * w * 1.5,
+          y: Math.random() * h * 0.5 - h * 0.2, // Появляются чаще в верхней части
+          length: Math.random() * 80 + 30,
+          speed: Math.random() * 5 + 4,
+          angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1), // Угол падения (около 45 градусов)
+          life: 1.0
+        });
+      }
+
+      shootingStars.forEach((star, i) => {
+        let vx = Math.cos(star.angle) * star.speed * 3;
+        let vy = Math.sin(star.angle) * star.speed * 3;
+        star.x -= vx; // Летят справа налево
+        star.y += vy;
+        star.life -= 0.015;
+        
+        if (star.life <= 0) {
+          shootingStars.splice(i, 1);
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y);
+          ctx.lineTo(star.x + vx * (star.length/10), star.y - vy * (star.length/10));
+          ctx.strokeStyle = `rgba(255, 255, 255, ${star.life * 0.6})`;
+          ctx.lineWidth = 1.2;
+          ctx.stroke();
+        }
+      });
+
       ctx.globalAlpha = 1;
       requestAnimationFrame(draw);
     }
