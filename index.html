@@ -88,6 +88,29 @@
     }
   }
 
+  /* ═════════ СТАРТОВАЯ АНИМАЦИЯ ЛОГОТИПА ═════════ */
+  .intro-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: var(--bg);
+    transition: opacity 0.9s ease;
+  }
+  .intro-overlay.fade-out { opacity: 0; pointer-events: none; }
+  .intro-logo {
+    position: fixed; left: 50%; top: 50%;
+    transform: translate(-50%, -50%) scale(2.6);
+    display: flex; align-items: center; gap: calc(14 * var(--u));
+    transition: left 1s cubic-bezier(.22,1,.36,1), top 1s cubic-bezier(.22,1,.36,1), transform 1s cubic-bezier(.22,1,.36,1);
+  }
+  .intro-logo svg { height: calc(48.5 * var(--u)); width: auto; display: block; }
+  .intro-logo span { font-size: calc(26 * var(--u)); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; }
+  .intro-overlay.shrink .intro-logo {
+    left: calc(160 * var(--u)); top: calc(51 * var(--u));
+    transform: translate(-50%, -50%) scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .intro-overlay { display: none; }
+  }
+
   /* ═════════ HEADER ═════════ */
   .topbar { position: fixed; inset: 0; z-index: 10; pointer-events: none; height: 100px; }
   .topbar > * { pointer-events: auto; position: absolute; }
@@ -375,6 +398,20 @@
 </head>
 <body>
 
+<div class="intro-overlay" id="introOverlay">
+  <div class="intro-logo">
+    <svg viewBox="0 0 31.5 48.5">
+      <linearGradient id="bg0" x1="8" y1="0" x2="34.1" y2="28.9" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#9e9e9e"/><stop offset=".28" stop-color="#a6a6a6"/><stop offset=".34" stop-color="#a3a3a3"/><stop offset=".40" stop-color="#3a3a3a"/><stop offset=".55" stop-color="#414141"/><stop offset=".60" stop-color="#7a7a7a"/><stop offset=".68" stop-color="#8e8e8e"/><stop offset=".80" stop-color="#a9a9a9"/><stop offset=".95" stop-color="#c4c4c4"/><stop offset="1" stop-color="#cccccc"/>
+      </linearGradient>
+      <path d="M21.5 0 L21.5 19.5 L31.5 19.5 L31.5 29 L10 48.5 L10 28.5 L0.5 28.5 L0.5 18.5 Z" fill="url(#bg0)"/>
+      <rect x="0.5" y="18.5" width="9" height="10" fill="#fdfdfd"/>
+      <rect x="22" y="19.5" width="9.5" height="9.5" fill="#fdfdfd"/>
+    </svg>
+    <span>razgruzKA</span>
+  </div>
+</div>
+
 <div class="fixed-bg">
   <canvas class="plate-canvas" id="bgCanvas" aria-hidden="true"></canvas>
   <div class="scroll-tint"></div>
@@ -623,9 +660,24 @@
   window.scrollTo(0, 0);
   window.addEventListener('load', () => window.scrollTo(0, 0));
 
+  /* Стартовая анимация: логотип в центре → затухая, уходит на своё место в шапке */
+  (function () {
+    const overlay = document.getElementById('introOverlay');
+    if (!overlay) return;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) { overlay.remove(); return; }
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        overlay.classList.add('shrink');
+        overlay.classList.add('fade-out');
+      }, 900);
+      setTimeout(() => { overlay.remove(); }, 900 + 1000);
+    });
+  })();
+
   /* Скролл эффект: максимальное затемнение фона до 95% */
   window.addEventListener('scroll', () => {
-    let scrollVal = Math.min(window.scrollY / (window.innerHeight * 0.5), 0.95);
+    let scrollVal = Math.min(window.scrollY / (window.innerHeight * 0.6), 0.6);
     document.body.style.setProperty('--scroll-progress', scrollVal);
   });
 
@@ -867,20 +919,32 @@
   (function () {
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
-    let w, h, particles;
+    let w, h, particles, glowDots;
 
     function resize() {
       w = canvas.width = window.innerWidth;
       h = canvas.height = window.innerHeight;
     }
     function initParticles() {
-      particles = Array.from({ length: 70 }, () => ({
+      particles = Array.from({ length: 130 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        r: Math.random() * 1.6 + 0.4,
+        r: Math.random() * 1.7 + 0.4,
         vx: (Math.random() - 0.5) * 0.15,
         vy: (Math.random() - 0.5) * 0.15,
-        a: Math.random() * 0.5 + 0.15
+        a: Math.random() * 0.55 + 0.15,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.02 + 0.01
+      }));
+      glowDots = Array.from({ length: 18 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 3 + 2,
+        vx: (Math.random() - 0.5) * 0.06,
+        vy: (Math.random() - 0.5) * 0.06,
+        a: Math.random() * 0.2 + 0.08,
+        phase: Math.random() * Math.PI * 2,
+        speed: Math.random() * 0.015 + 0.008
       }));
     }
     window.addEventListener('resize', resize);
@@ -908,13 +972,28 @@
       ctx.fillRect(0, 0, w, h);
 
       ctx.fillStyle = '#ffffff';
+      const now = Date.now() * 0.001;
       particles.forEach(p => {
         p.x += p.vx; p.y += p.vy;
         if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
         if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
-        ctx.globalAlpha = p.a;
+        const twinkle = 0.55 + 0.45 * Math.sin(now * p.speed * 10 + p.phase);
+        ctx.globalAlpha = p.a * twinkle;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      glowDots.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < -20) p.x = w + 20; if (p.x > w + 20) p.x = -20;
+        if (p.y < -20) p.y = h + 20; if (p.y > h + 20) p.y = -20;
+        const twinkle = 0.55 + 0.45 * Math.sin(now * p.speed * 10 + p.phase);
+        const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 6);
+        glow.addColorStop(0, `rgba(255,255,255,${p.a * twinkle})`);
+        glow.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 6, 0, Math.PI * 2);
         ctx.fill();
       });
       ctx.globalAlpha = 1;
