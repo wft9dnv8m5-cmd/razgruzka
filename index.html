@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>razgruzKA — Вы ставите задачу, мы устраняем рутину</title>
+<meta name="description" content="razgruzKA — автоматизация рутинных процессов: боты, дашборды и трекеры под ключ для студентов, старост, фрилансеров и малого бизнеса.">
+<meta property="og:title" content="razgruzKA — вы ставите задачу, мы устраняем рутину">
+<meta property="og:description" content="Анализируем ваши рутинные процессы и превращаем их в готовые автоматизированные решения.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
@@ -56,12 +60,7 @@
 
   /* ═════════ FIXED BACKGROUND STAGE ═════════ */
   .fixed-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-  .plate-video {
-    position: absolute; left: 50%; top: calc(1 * var(--u));
-    width: calc(1492 * var(--u)); height: calc(1054 * var(--u));
-    transform: translateX(calc(-50% - calc(0.5 * var(--u))));
-    object-fit: cover;
-  }
+  .plate-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
   .fixed-bg::after {
     content: ''; position: absolute; inset: 0;
     background: 
@@ -83,7 +82,6 @@
   }
 
   @media (max-aspect-ratio: 11/10) {
-    .plate-video { inset: 0; width: 100%; height: 100%; transform: none; object-position: 43% center; left: auto; top: auto; }
     .fixed-bg::after {
       background: linear-gradient(to right, rgba(5,5,5,.86) 0%, rgba(5,5,5,.66) 42%, rgba(5,5,5,.20) 78%, rgba(5,5,5,.10) 100%),
                   linear-gradient(to bottom, rgba(5,5,5,.72) 0%, rgba(5,5,5,.34) 24%, rgba(5,5,5,.34) 56%, rgba(5,5,5,.80) 82%, rgba(5,5,5,.97) 94%, #050505 100%);
@@ -350,7 +348,12 @@
   .full-site-view { position: absolute; inset: 0; z-index: 60; background: #000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.6s; }
   .full-site-view.open { transform: translateY(0); }
   .full-site-top { height: min(6vh, 44px); width: 100%; background: #000; }
-  .full-site-view iframe { width: 100%; flex: 1; border: none; background: #fff; border-radius: 0 0 min(5vh, 47px) min(5vh, 47px); }
+  .site-mockup { flex: 1; background: #f4f4f5; border-radius: 0 0 min(5vh, 47px) min(5vh, 47px); padding: 8% 7% 10%; display: flex; flex-direction: column; gap: 14px; }
+  .mockup-topline { height: 14px; width: 55%; background: #dcdce0; border-radius: 6px; }
+  .mockup-card { height: 64px; background: #fff; border: 1px solid #e5e5e7; border-radius: 14px; }
+  .mockup-line { height: 10px; background: #e5e5e7; border-radius: 5px; width: 100%; }
+  .mockup-line.short { width: 38%; }
+  .site-mockup .d-submit { margin-top: auto; text-decoration: none; display: block; }
 
   .demo-cursor { position: absolute; width: 40px; height: 40px; z-index: 100; opacity: 0; transition: left 0.5s, top 0.5s, opacity 0.3s; pointer-events: none;}
   .demo-cursor::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 0 5px rgba(255,255,255,0.2); transition: transform 0.15s; }
@@ -362,9 +365,7 @@
 <body>
 
 <div class="fixed-bg">
-  <video class="plate-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-    <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260808_112712_da9d53df-6d27-4b12-bdf6-aa9dc2622bdf.mp4" type="video/mp4">
-  </video>
+  <canvas class="plate-canvas" id="bgCanvas" aria-hidden="true"></canvas>
   <div class="scroll-tint"></div>
 </div>
 
@@ -420,7 +421,8 @@
     <h2>О нас</h2>
     <p class="about-text">
       Мы создаем <b>razgruzKA</b> для тех, чье время стоит дорого. Мы сами проходили через хаос разрозненных таблиц, бесконечных чатов и утомительных отчетов, собираемых вручную по выходным.<br><br>
-      Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.
+      Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.<br><br>
+      Один из таких инструментов уже работает: <b>StaroSTATT</b> — сервис для старост групп, который заменяет бумажный журнал посещаемости онлайн-отметками и сам собирает готовый отчёт для куратора.
     </p>
   </section>
 
@@ -466,6 +468,10 @@
         <summary>Это платно?</summary>
         <p>Заполнение анкеты и получение базового аудита ваших процессов — полностью бесплатно. Разработка кастомных программных решений и полноценных инфраструктур оценивается индивидуально после аудита.</p>
       </details>
+      <details>
+        <summary>А если моя задача нетиповая?</summary>
+        <p>Присылайте любую рутину в анкете — если процесс можно описать словами, скорее всего, его можно автоматизировать. Если задача окажется за рамками наших возможностей, мы прямо скажем об этом уже на этапе бесплатного аудита, без лишних обещаний.</p>
+      </details>
     </div>
   </section>
 
@@ -497,33 +503,39 @@
     <!-- Шаг 1 -->
     <div class="real-quiz-step active" id="rq-step1">
       <div class="quiz-title">Чем вы занимаетесь?</div>
-      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Я студент / староста</button>
-      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Свой бизнес / стартап</button>
-      <button class="quiz-opt" onclick="nextRealQuiz('rq-step2')">Фрилансер / специалист</button>
+      <button class="quiz-opt" onclick="selectRole('Студент / староста')">Я студент / староста</button>
+      <button class="quiz-opt" onclick="selectRole('Свой бизнес / стартап')">Свой бизнес / стартап</button>
+      <button class="quiz-opt" onclick="selectRole('Фрилансер / специалист')">Фрилансер / специалист</button>
       <button class="quiz-opt" onclick="document.getElementById('rq-other').style.display='block'">Другое</button>
       
       <div id="rq-other" style="display:none; margin-top: 15px;">
-        <input type="text" class="quiz-input" placeholder="Впишите вашу роль...">
-        <button class="btn-next" style="width: 100%" onclick="nextRealQuiz('rq-step2')">Далее</button>
+        <input type="text" class="quiz-input" id="rq-otherInput" placeholder="Впишите вашу роль...">
+        <button class="btn-next" style="width: 100%" onclick="selectOtherRole()">Далее</button>
       </div>
     </div>
 
     <!-- Шаг 2 -->
     <div class="real-quiz-step" id="rq-step2">
       <div class="quiz-title">Что отнимает больше всего времени?</div>
-      <textarea class="quiz-input" style="height: 120px;" placeholder="Опишите процессы, которые приходится делать вручную и которые вас раздражают..."></textarea>
+      <textarea class="quiz-input" id="rq-problem" style="height: 120px;" placeholder="Опишите процессы, которые приходится делать вручную и которые вас раздражают..."></textarea>
       <div class="quiz-footer">
         <button class="btn-next" style="background: transparent; border: 1px solid var(--line); color: var(--ink);" onclick="nextRealQuiz('rq-step1')">Назад</button>
         <button class="btn-next" onclick="nextRealQuiz('rq-step3')">Готово</button>
       </div>
     </div>
 
-    <!-- Шаг 3 (Завершение) -->
+    <!-- Шаг 3 (Контакт) -->
     <div class="real-quiz-step" id="rq-step3">
       <div class="quiz-title">Спасибо за ответы!</div>
       <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem;">Оставьте вашу почту или Telegram, чтобы мы прислали вам аудит ваших процессов и предложили решение.</p>
-      <input type="text" class="quiz-input" placeholder="Email или @telegram">
-      <button class="btn-next" style="width: 100%" onclick="closeRealQuiz(); alert('Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.');">Отправить заявку</button>
+      <input type="text" class="quiz-input" id="rq-contact" placeholder="Email или @telegram">
+      <button class="btn-next" style="width: 100%" onclick="submitRealQuiz()">Отправить заявку</button>
+    </div>
+
+    <!-- Шаг 4 (Готово) -->
+    <div class="real-quiz-step" id="rq-step4">
+      <div class="quiz-title">Заявка готова к отправке ✓</div>
+      <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.5;">Мы открыли черновик письма с вашими ответами — нажмите «Отправить» в почтовом клиенте, и заявка придёт к нам напрямую.</p>
     </div>
 
   </div>
@@ -578,7 +590,14 @@
 
       <div class="full-site-view" id="fullSiteView">
         <div class="full-site-top"></div>
-        <iframe src="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" title="StaroSTATT App"></iframe>
+        <div class="site-mockup">
+          <div class="mockup-topline"></div>
+          <div class="mockup-card"></div>
+          <div class="mockup-line"></div>
+          <div class="mockup-line short"></div>
+          <div class="mockup-card"></div>
+          <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" rel="noopener" class="d-submit" style="background:#007aff;color:#fff;">Открыть StaroSTATT →</a>
+        </div>
       </div>
 
       <div class="demo-cursor" id="cursor"></div>
@@ -612,16 +631,45 @@
   });
 
   /* ═════════ ЛОГИКА НАСТОЯЩЕЙ АНКЕТЫ ═════════ */
+  let rqRole = '';
   function openRealQuiz() {
     document.getElementById('realQuizStage').classList.add('is-active');
   }
   function closeRealQuiz() {
     document.getElementById('realQuizStage').classList.remove('is-active');
-    setTimeout(() => { nextRealQuiz('rq-step1'); }, 400);
+    setTimeout(() => {
+      nextRealQuiz('rq-step1');
+      document.getElementById('rq-other').style.display = 'none';
+      document.getElementById('rq-otherInput').value = '';
+      document.getElementById('rq-problem').value = '';
+      document.getElementById('rq-contact').value = '';
+      rqRole = '';
+    }, 400);
   }
   function nextRealQuiz(stepId) {
     document.querySelectorAll('.real-quiz-step').forEach(el => el.classList.remove('active'));
     document.getElementById(stepId).classList.add('active');
+  }
+  function selectRole(role) {
+    rqRole = role;
+    nextRealQuiz('rq-step2');
+  }
+  function selectOtherRole() {
+    const val = document.getElementById('rq-otherInput').value.trim();
+    rqRole = val || 'Другое';
+    nextRealQuiz('rq-step2');
+  }
+  function submitRealQuiz() {
+    const problem = document.getElementById('rq-problem').value.trim();
+    const contact = document.getElementById('rq-contact').value.trim();
+    const subject = encodeURIComponent('Заявка с сайта razgruzKA');
+    const body = encodeURIComponent(
+      'Роль: ' + (rqRole || '—') + '\n' +
+      'Задача/рутина: ' + (problem || '—') + '\n' +
+      'Контакт для ответа: ' + (contact || '—')
+    );
+    window.location.href = 'mailto:isievemil@gmail.com?subject=' + subject + '&body=' + body;
+    nextRealQuiz('rq-step4');
   }
 
   /* ═════════ ЛОГИКА АВТОМАТИЧЕСКОГО ДЕМО ═════════ */
@@ -775,6 +823,68 @@
     // 8. Сайт
     document.getElementById('fullSiteView').classList.add('open');
   }
+</script>
+
+<script>
+  /* ═════════ ФОНОВАЯ АНИМАЦИЯ (canvas, вместо внешнего видео) ═════════ */
+  (function () {
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    function initParticles() {
+      particles = Array.from({ length: 70 }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.6 + 0.4,
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        a: Math.random() * 0.5 + 0.15
+      }));
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    initParticles();
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const t = Date.now() * 0.00005;
+
+      const g1x = w * 0.3 + Math.sin(t) * w * 0.1;
+      const g1y = h * 0.35 + Math.cos(t * 1.3) * h * 0.1;
+      const grad1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, w * 0.4);
+      grad1.addColorStop(0, 'rgba(130,130,140,0.16)');
+      grad1.addColorStop(1, 'rgba(5,5,5,0)');
+      ctx.fillStyle = grad1;
+      ctx.fillRect(0, 0, w, h);
+
+      const g2x = w * 0.7 + Math.cos(t * 0.8) * w * 0.12;
+      const g2y = h * 0.6 + Math.sin(t * 1.1) * h * 0.1;
+      const grad2 = ctx.createRadialGradient(g2x, g2y, 0, g2x, g2y, w * 0.35);
+      grad2.addColorStop(0, 'rgba(90,90,100,0.13)');
+      grad2.addColorStop(1, 'rgba(5,5,5,0)');
+      ctx.fillStyle = grad2;
+      ctx.fillRect(0, 0, w, h);
+
+      ctx.fillStyle = '#ffffff';
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = w; if (p.x > w) p.x = 0;
+        if (p.y < 0) p.y = h; if (p.y > h) p.y = 0;
+        ctx.globalAlpha = p.a;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(draw);
+    }
+    draw();
+  })();
 </script>
 </body>
 </html>
