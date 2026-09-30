@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RazgruzKA — Вы ставите задачу, мы устраняем рутину</title>
-<meta name="description" content="RazgruzKA — автоматизация рутинных процессов: боты, дашборды и трекеры под ключ для студентов, старост, фрилансеров и малого бизнеса.">
-<meta property="og:title" content="RazgruzKA — вы ставите задачу, мы устраняем рутину">
+<title>razgruzKA — Вы ставите задачу, мы устраняем рутину</title>
+<meta name="description" content="razgruzKA — автоматизация рутинных процессов: боты, дашборды и трекеры под ключ для студентов, старост, фрилансеров и малого бизнеса.">
+<meta property="og:title" content="razgruzKA — вы ставите задачу, мы устраняем рутину">
 <meta property="og:description" content="Анализируем ваши рутинные процессы и превращаем их в готовые автоматизированные решения.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -650,13 +650,14 @@
         <div class="notif-text"><h4>Входящие</h4><p>Ваша проблема решена — открыть</p></div>
       </div>
 
+      <!-- ИЗМЕНЕННЫЙ БЛОК ПИСЬМА -->
       <div class="email-view" id="emailView">
-        <div class="email-header"><h2>Решения готовы</h2><p style="color:#aaa;">От: razgruzKA</p></div>
+        <div class="email-header"><h2>Решение найдено</h2><p style="color:#aaa;">От: razgruzKA</p></div>
         <div class="email-body">
-          <div class="email-msg">Мы подготовили для вас демо-решения. Посмотрите, как это работает на реальных примерах:</div>
+          <div class="email-msg">Мы собрали для вас систему контроля процессов. Посмотрите, как она работает в реальных условиях:</div>
           <div style="display: flex; flex-direction: column; gap: 14px; margin-top: auto; margin-bottom: 20px;">
-            <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" class="d-submit" style="background: #333; color: #fff; margin: 0;">Проект: StaroSTATT</a>
-            <a href="https://wft9dnv8m5-cmd.github.io/aydit/" target="_blank" class="d-submit" style="background: #007aff; color: #fff; margin: 0;">Проект: Aydit (Аудит)</a>
+            <a href="https://wft9dnv8m5-cmd.github.io/aydit/" target="_blank" class="d-submit" style="background: #007aff; color: #fff; margin: 0; box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4);">Проект: Aydit (Аудит)</a>
+            <a href="#portfolio" onclick="closeDemo()" class="d-submit" style="background: transparent; color: #aaa; border: 1px solid #333; margin: 0; font-weight: 500;">Посмотреть все проекты →</a>
           </div>
         </div>
       </div>
@@ -884,7 +885,7 @@
     
     notif.classList.remove('show');
     document.getElementById('emailView').classList.add('open');
-    // Демо заканчивается здесь. Теперь пользователь может сам нажимать кнопки-ссылки в письме.
+    // Демо заканчивается здесь. Теперь пользователь может сам нажимать кнопки.
   }
 </script>
 
