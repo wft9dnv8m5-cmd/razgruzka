@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>razgruzKA — Вы ставите задачу, мы устраняем рутину</title>
-<meta name="description" content="razgruzKA — автоматизация рутинных процессов: боты, дашборды и трекеры под ключ для студентов, старост, фрилансеров и малого бизнеса.">
-<meta property="og:title" content="razgruzKA — вы ставите задачу, мы устраняем рутину">
+<title>RazgruzKA — Вы ставите задачу, мы устраняем рутину</title>
+<meta name="description" content="RazgruzKA — автоматизация рутинных процессов: боты, дашборды и трекеры под ключ для студентов, старост, фрилансеров и малого бизнеса.">
+<meta property="og:title" content="RazgruzKA — вы ставите задачу, мы устраняем рутину">
 <meta property="og:description" content="Анализируем ваши рутинные процессы и превращаем их в готовые автоматизированные решения.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,11 +54,9 @@
     font-family: 'Manrope', system-ui, -apple-system, sans-serif;
     text-rendering: geometricPrecision;
     -webkit-font-smoothing: antialiased;
-    /* Базовое мягкое свечение за всем текстом */
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.08);
   }
   
-  /* Усиленное свечение для заголовков и акцентов */
   h1, h2, h3, .brand-text, .intro-logo span {
     text-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
   }
@@ -149,7 +147,7 @@
     background: var(--pill); color: var(--pill-ink); font-weight: 600;
     border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
     transition: transform 0.2s, background 0.2s; padding: 1em 2em; font-size: 1rem;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15); /* Свечение кнопки */
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
   }
   .pill:hover { transform: scale(1.03); background: #e5e5e5; box-shadow: 0 0 25px rgba(255, 255, 255, 0.25); }
   
@@ -227,6 +225,24 @@
     grid-column: 1 / -1; justify-self: center; width: calc(50% - 1.5rem);
   }
 
+  /* Portfolio Section */
+  .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+  .portfolio-card {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--line);
+    border-radius: 24px; padding: 3rem; transition: transform 0.3s, background 0.3s;
+    display: flex; flex-direction: column;
+  }
+  .portfolio-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.2); }
+  .portfolio-card h3 { font-size: 2rem; font-weight: 500; margin-bottom: 1rem; color: var(--ink); }
+  .portfolio-card p { font-size: 1.1rem; color: var(--muted); line-height: 1.6; margin-bottom: 2rem; flex: 1; }
+  .portfolio-link {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--bg); padding: 1rem 2rem;
+    border-radius: 999px; font-weight: 600; text-decoration: none;
+    transition: transform 0.2s; align-self: flex-start;
+  }
+  .portfolio-link:hover { transform: scale(1.05); }
+
   /* FAQ Accordion */
   .faq-list { display: flex; flex-direction: column; gap: 1rem; }
   details {
@@ -289,6 +305,7 @@
     
     .steps-grid { grid-template-columns: 1fr; gap: 2rem; }
     .step-card:nth-child(3) { grid-column: span 1; width: 100%; }
+    .portfolio-grid { grid-template-columns: 1fr; }
   }
 
   /* ═════════ MANUAL QUIZ MODAL (REAL SURVEY) ═════════ */
@@ -371,7 +388,7 @@
   .d-opt { width: 100%; text-align: left; padding: 18px 20px; margin-bottom: 14px; background: #1c1c1e; border: 1px solid #333; border-radius: 16px; font-size: clamp(15px, 2vh, 18px); color: #fff; }
   .d-opt.selected { border-color: #fff; background: rgba(255,255,255,0.1); }
   .d-input { width: 100%; background: #1c1c1e; border: 1px solid #555; border-radius: 16px; padding: 18px 20px; font-size: clamp(15px, 2vh, 18px); color: #fff; margin-bottom: 16px; }
-  .d-submit { background: #fff; color: #000; font-weight: 600; padding: 18px; border-radius: 16px; width: 100%; text-align: center; margin-top: auto; margin-bottom: 20px; }
+  .d-submit { background: #fff; color: #000; font-weight: 600; padding: 18px; border-radius: 16px; width: 100%; text-align: center; margin-top: auto; margin-bottom: 20px; text-decoration: none; display: block; }
 
   .notification { position: absolute; top: -120px; left: 16px; right: 16px; background: rgba(30,30,30,0.85); backdrop-filter: blur(15px); border-radius: 20px; padding: 16px; display: flex; gap: 14px; z-index: 50; transition: top 0.5s; }
   .notification.show { top: 16px; }
@@ -380,21 +397,11 @@
   .notif-text p { font-size: 14px; color: #ddd; }
 
   .email-view { position: absolute; inset: 0; background: #111; z-index: 40; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.5s; }
-  .email-view.open { transform: translateY(0); }
+  .email-view.open { transform: translateY(0); pointer-events: auto; }
   .email-header { padding: 15% 6% 6%; border-bottom: 1px solid #222; }
   .email-header h2 { font-size: 26px; margin-bottom: 8px; }
   .email-body { flex: 1; padding: 6%; display: flex; flex-direction: column; }
   .email-msg { font-size: 17px; line-height: 1.5; margin-bottom: 30px; }
-
-  .full-site-view { position: absolute; inset: 0; z-index: 60; background: #000; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.6s; }
-  .full-site-view.open { transform: translateY(0); }
-  .full-site-top { height: min(6vh, 44px); width: 100%; background: #000; }
-  .site-mockup { flex: 1; background: #f4f4f5; border-radius: 0 0 min(5vh, 47px) min(5vh, 47px); padding: 8% 7% 10%; display: flex; flex-direction: column; gap: 14px; }
-  .mockup-topline { height: 14px; width: 55%; background: #dcdce0; border-radius: 6px; }
-  .mockup-card { height: 64px; background: #fff; border: 1px solid #e5e5e7; border-radius: 14px; }
-  .mockup-line { height: 10px; background: #e5e5e7; border-radius: 5px; width: 100%; }
-  .mockup-line.short { width: 38%; }
-  .site-mockup .d-submit { margin-top: auto; text-decoration: none; display: block; }
 
   .demo-cursor { position: absolute; width: 40px; height: 40px; z-index: 100; opacity: 0; transition: left 0.5s, top 0.5s, opacity 0.3s; pointer-events: none;}
   .demo-cursor::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 24px; height: 24px; background: rgba(255,255,255,0.8); border-radius: 50%; box-shadow: 0 0 0 5px rgba(255,255,255,0.2); transition: transform 0.15s; }
@@ -405,7 +412,6 @@
 </head>
 <body>
 
-<!-- Анимация логотипа с новой логикой -->
 <div class="intro-overlay" id="introOverlay">
   <div class="intro-logo">
     <svg viewBox="0 0 31.5 48.5">
@@ -438,9 +444,10 @@
     <span class="brand-text">razgruzKA</span>
   </a>
   <nav class="links" aria-label="Основное меню">
+    <a href="#portfolio">Проекты</a>
     <a href="#about">О нас</a>
     <a href="#features">Преимущества</a>
-    <a href="#faq">Частые вопросы</a>
+    <a href="#faq">Вопросы</a>
     <a href="#contact">Контакты</a>
   </nav>
   <button id="burger" aria-label="Меню" aria-expanded="false">
@@ -451,6 +458,7 @@
 <nav class="menu" id="menu">
   <div class="menu-inner">
     <ul class="menu-list">
+      <li><a href="#portfolio">Проекты</a></li>
       <li><a href="#about">О нас</a></li>
       <li><a href="#features">Преимущества</a></li>
       <li><a href="#faq">Частые вопросы</a></li>
@@ -465,10 +473,28 @@
     <p class="sub"><span>Анализируем ваши тяжелые и однообразные процессы,</span> <span>чтобы превратить их в элегантные автоматизированные решения.</span></p>
     
     <div class="actions">
-      <!-- Настоящая анкета для пользователя -->
       <button class="pill" onclick="openRealQuiz()">Пройти анкету</button>
-      <!-- Запуск демонстрации -->
       <button class="ghost" onclick="openDemo()">Смотреть демо</button>
+    </div>
+  </section>
+
+  <!-- Секция: Портфолио -->
+  <section id="portfolio" class="section-container">
+    <h2>Реализованные проекты</h2>
+    <p class="about-text" style="margin-bottom: 3rem;">
+      Мы не просто обещаем — мы делаем. Вот примеры рабочих инструментов, которые уже сегодня экономят часы рутинной работы нашим клиентам.
+    </p>
+    <div class="portfolio-grid">
+      <div class="portfolio-card reveal">
+        <h3>StaroSTATT</h3>
+        <p>Полноценный сервис для старост студенческих групп. Полностью заменяет бумажный журнал: позволяет отмечать посещаемость в пару кликов, отслеживать расписание и автоматически генерировать сводные отчеты для кураторов без ручных подсчетов.</p>
+        <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" class="portfolio-link">Смотреть проект</a>
+      </div>
+      <div class="portfolio-card reveal">
+        <h3>Aydit</h3>
+        <p>Платформа для автоматизации аудита и работы с документацией. Избавляет от ручной сверки бесконечных таблиц, упрощает контроль процессов и первичной отчетности. Система берет на себя монотонную аналитику, позволяя вам сосредоточиться на важных управленческих решениях.</p>
+        <a href="https://wft9dnv8m5-cmd.github.io/aydit/" target="_blank" class="portfolio-link">Смотреть проект</a>
+      </div>
     </div>
   </section>
 
@@ -477,8 +503,7 @@
     <h2>О нас</h2>
     <p class="about-text">
       Мы создаем <b>razgruzKA</b> для тех, чье время стоит дорого. Мы сами проходили через хаос разрозненных таблиц, бесконечных чатов и утомительных отчетов, собираемых вручную по выходным.<br><br>
-      Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.<br><br>
-      Один из таких инструментов уже работает: <b>StaroSTATT</b> — сервис для старост групп, который заменяет бумажный журнал посещаемости онлайн-отметками и сам собирает готовый отчёт для куратора.
+      Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.
     </p>
   </section>
 
@@ -549,14 +574,11 @@
   </section>
 </div>
 
-<!-- ========================================== -->
-<!-- НАСТОЯЩАЯ АНКЕТА (Для пользователя)        -->
-<!-- ========================================== -->
+<!-- НАСТОЯЩАЯ АНКЕТА -->
 <div class="modal-overlay" id="realQuizStage">
   <button class="modal-close" onclick="closeRealQuiz()">✕</button>
   <div class="quiz-card">
     
-    <!-- Шаг 1 -->
     <div class="real-quiz-step active" id="rq-step1">
       <div class="quiz-title">Чем вы занимаетесь?</div>
       <button class="quiz-opt" onclick="selectRole('Студент / староста')">Я студент / староста</button>
@@ -570,7 +592,6 @@
       </div>
     </div>
 
-    <!-- Шаг 2 -->
     <div class="real-quiz-step" id="rq-step2">
       <div class="quiz-title">Что отнимает больше всего времени?</div>
       <textarea class="quiz-input" id="rq-problem" style="height: 120px;" placeholder="Опишите процессы, которые приходится делать вручную и которые вас раздражают..."></textarea>
@@ -580,7 +601,6 @@
       </div>
     </div>
 
-    <!-- Шаг 3 (Контакт) -->
     <div class="real-quiz-step" id="rq-step3">
       <div class="quiz-title">Спасибо за ответы!</div>
       <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.5; margin-bottom: 2rem;">Оставьте вашу почту или Telegram, чтобы мы прислали вам аудит ваших процессов и предложили решение.</p>
@@ -588,7 +608,6 @@
       <button class="btn-next" style="width: 100%" onclick="submitRealQuiz()">Отправить заявку</button>
     </div>
 
-    <!-- Шаг 4 (Готово) -->
     <div class="real-quiz-step" id="rq-step4">
       <div class="quiz-title">Заявка готова к отправке ✓</div>
       <p style="color: var(--muted); font-size: 1.1rem; line-height: 1.5;">Мы открыли черновик письма с вашими ответами — нажмите «Отправить» в почтовом клиенте, и заявка придёт к нам напрямую.</p>
@@ -597,9 +616,7 @@
   </div>
 </div>
 
-<!-- ========================================== -->
-<!-- АВТОМАТИЧЕСКОЕ ДЕМО (iPhone Simulator)     -->
-<!-- ========================================== -->
+<!-- АВТОМАТИЧЕСКОЕ ДЕМО (iPhone Simulator) -->
 <div class="demo-stage" id="demoStage">
   <button class="demo-close" onclick="closeDemo()">✕</button>
   <div class="iphone-frame">
@@ -610,8 +627,8 @@
       <div class="iphone-content">
         <div class="demo-quiz-step active" id="d-step1">
           <div class="d-title">Кто вы?</div>
-          <div class="d-opt">Студент</div>
-          <div class="d-opt">Преподаватель</div>
+          <div class="d-opt">Владелец бизнеса</div>
+          <div class="d-opt">Менеджер проектов</div>
           <div class="d-opt" id="d-btnOther">Другое</div>
           <div id="d-otherWrap" style="opacity: 0; display: none; transition: opacity 0.3s;">
             <input type="text" id="d-inputOther" class="d-input" placeholder="Введите вашу роль...">
@@ -634,22 +651,13 @@
       </div>
 
       <div class="email-view" id="emailView">
-        <div class="email-header"><h2>Решение найдено</h2><p style="color:#aaa;">От: razgruzKA</p></div>
+        <div class="email-header"><h2>Решения готовы</h2><p style="color:#aaa;">От: razgruzKA</p></div>
         <div class="email-body">
-          <div class="email-msg">Ваша персональная система готова. Нажмите кнопку, чтобы запустить приложение.</div>
-          <div id="siteLinkBtn" class="d-submit" style="background: #007aff; color: #fff;">Открыть StaroSTATT</div>
-        </div>
-      </div>
-
-      <div class="full-site-view" id="fullSiteView">
-        <div class="full-site-top"></div>
-        <div class="site-mockup">
-          <div class="mockup-topline"></div>
-          <div class="mockup-card"></div>
-          <div class="mockup-line"></div>
-          <div class="mockup-line short"></div>
-          <div class="mockup-card"></div>
-          <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" rel="noopener" class="d-submit" style="background:#007aff;color:#fff;">Открыть StaroSTATT →</a>
+          <div class="email-msg">Мы подготовили для вас демо-решения. Посмотрите, как это работает на реальных примерах:</div>
+          <div style="display: flex; flex-direction: column; gap: 14px; margin-top: auto; margin-bottom: 20px;">
+            <a href="https://wft9dnv8m5-cmd.github.io/StaroSTATT/" target="_blank" class="d-submit" style="background: #333; color: #fff; margin: 0;">Проект: StaroSTATT</a>
+            <a href="https://wft9dnv8m5-cmd.github.io/aydit/" target="_blank" class="d-submit" style="background: #007aff; color: #fff; margin: 0;">Проект: Aydit (Аудит)</a>
+          </div>
         </div>
       </div>
 
@@ -663,7 +671,6 @@
   window.scrollTo(0, 0);
   window.addEventListener('load', () => window.scrollTo(0, 0));
 
-  /* Обновленная логика старта: висит 3.5 секунды, затем возвращается в шапку */
   (function () {
     const overlay = document.getElementById('introOverlay');
     if (!overlay) return;
@@ -671,18 +678,15 @@
     if (reduceMotion) { overlay.remove(); return; }
     
     window.addEventListener('load', () => {
-      // Через 3.5 секунды делаем фон прозрачным и запускаем полет в угол
       setTimeout(() => {
         overlay.classList.add('shrink');
         overlay.classList.add('bg-fade');
       }, 3500);
       
-      // Незадолго до конца полета гасим прозрачность самого лого, чтобы обнажить настоящий
       setTimeout(() => { 
         overlay.classList.add('fade-out'); 
       }, 3500 + 800); 
       
-      // Удаляем из DOM
       setTimeout(() => { 
         overlay.remove(); 
       }, 3500 + 1300);
@@ -711,10 +715,10 @@
     }
   });
 
-  /* ═════════ ПЛАВНОЕ ПОЯВЛЕНИЕ ═════════ */
+  /* ПЛАВНОЕ ПОЯВЛЕНИЕ */
   (function () {
     const items = document.querySelectorAll(
-      '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link'
+      '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link, .portfolio-card'
     );
     items.forEach((el, i) => {
       el.classList.add('reveal');
@@ -731,7 +735,7 @@
     items.forEach(el => io.observe(el));
   })();
 
-  /* ═════════ НАСТОЯЩАЯ АНКЕТА ═════════ */
+  /* НАСТОЯЩАЯ АНКЕТА */
   let rqRole = '';
   function openRealQuiz() {
     document.getElementById('realQuizStage').classList.add('is-active');
@@ -773,7 +777,7 @@
     nextRealQuiz('rq-step4');
   }
 
-  /* ═════════ АВТОМАТИЧЕСКОЕ ДЕМО ═════════ */
+  /* АВТОМАТИЧЕСКОЕ ДЕМО */
   let demoActive = false;
   let demoTimer = null;
   const sleep = ms => new Promise(r => { demoTimer = setTimeout(r, ms); });
@@ -799,7 +803,6 @@
     document.getElementById('d-doneText').innerText = 'Отправка...';
     document.getElementById('demoNotif').classList.remove('show');
     document.getElementById('emailView').classList.remove('open');
-    document.getElementById('fullSiteView').classList.remove('open');
     const cursor = document.getElementById('cursor');
     cursor.classList.remove('active', 'tap');
     cursor.style.left = '50%'; cursor.style.top = '90%';
@@ -849,7 +852,7 @@
     
     await moveCursor('d-inputOther'); await tap();
     cursor.classList.remove('active');
-    await typeText('d-inputOther', 'Я староста');
+    await typeText('d-inputOther', 'Руководитель отдела');
     
     cursor.classList.add('active');
     await moveCursor('d-btnNext1'); await tap();
@@ -860,7 +863,7 @@
 
     await moveCursor('d-inputProblem'); await tap();
     cursor.classList.remove('active');
-    await typeText('d-inputProblem', 'очень много трачу времени на то чтобы отмечать носить с собой журнал и потом делать аналитику о посещаемости и отправлять куратору группы');
+    await typeText('d-inputProblem', 'Сбор отчетов из разных таблиц, ручная сверка документов и рутина занимают половину дня.');
     
     cursor.classList.add('active');
     await moveCursor('d-btnSubmit'); await tap();
@@ -881,18 +884,12 @@
     
     notif.classList.remove('show');
     document.getElementById('emailView').classList.add('open');
-    await sleep(1000);
-
-    cursor.classList.add('active');
-    await moveCursor('siteLinkBtn'); await tap();
-    cursor.classList.remove('active');
-
-    document.getElementById('fullSiteView').classList.add('open');
+    // Демо заканчивается здесь. Теперь пользователь может сам нажимать кнопки-ссылки в письме.
   }
 </script>
 
 <script>
-  /* ═════════ ОБНОВЛЕННАЯ ФОНОВАЯ АНИМАЦИЯ (Звезды и динамика) ═════════ */
+  /* ФОНОВАЯ АНИМАЦИЯ */
   (function () {
     const canvas = document.getElementById('bgCanvas');
     const ctx = canvas.getContext('2d');
@@ -904,7 +901,6 @@
     }
     
     function initParticles() {
-      // Увеличено количество звезд и добавлено больше вариативности в их размеры и яркость
       particles = Array.from({ length: 300 }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
@@ -935,7 +931,6 @@
       ctx.clearRect(0, 0, w, h);
       const t = Date.now() * 0.00005;
 
-      // Динамичные градиенты на фоне
       const g1x = w * 0.3 + Math.sin(t) * w * 0.15;
       const g1y = h * 0.35 + Math.cos(t * 1.3) * h * 0.15;
       const grad1 = ctx.createRadialGradient(g1x, g1y, 0, g1x, g1y, w * 0.45);
@@ -954,7 +949,6 @@
 
       const now = Date.now() * 0.001;
       
-      // Отрисовка обычных звезд с сильным мерцанием
       ctx.fillStyle = '#ffffff';
       particles.forEach(p => {
         p.x += p.vx; p.y += p.vy;
@@ -967,7 +961,6 @@
         ctx.fill();
       });
       
-      // Крупные размытые пятна (Ambient glow)
       glowDots.forEach(p => {
         p.x += p.vx; p.y += p.vy;
         if (p.x < -30) p.x = w + 30; if (p.x > w + 30) p.x = -30;
@@ -982,14 +975,13 @@
         ctx.fill();
       });
 
-      // Логика падающих звезд (Shooting stars) для особой динамики
-      if (Math.random() < 0.015) { // Шанс появления падающей звезды
+      if (Math.random() < 0.015) {
         shootingStars.push({
           x: Math.random() * w * 1.5,
-          y: Math.random() * h * 0.5 - h * 0.2, // Появляются чаще в верхней части
+          y: Math.random() * h * 0.5 - h * 0.2,
           length: Math.random() * 80 + 30,
           speed: Math.random() * 5 + 4,
-          angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1), // Угол падения (около 45 градусов)
+          angle: Math.PI / 4 + (Math.random() * 0.2 - 0.1),
           life: 1.0
         });
       }
@@ -997,7 +989,7 @@
       shootingStars.forEach((star, i) => {
         let vx = Math.cos(star.angle) * star.speed * 3;
         let vy = Math.sin(star.angle) * star.speed * 3;
-        star.x -= vx; // Летят справа налево
+        star.x -= vx;
         star.y += vy;
         star.life -= 0.015;
         
