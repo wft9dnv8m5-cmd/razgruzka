@@ -186,10 +186,10 @@
 
   /* ═════════ SPACIOUS INFO SECTIONS ═════════ */
   .section-container {
-    max-width: 1100px; margin: 0 auto; padding: 15vh 5vw;
+    max-width: 1200px; margin: 0 auto; padding: 15vh 5vw;
   }
   .section-container h2 {
-    font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 4rem;
+    font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 300; letter-spacing: -0.02em; margin-bottom: 3rem;
   }
 
   /* Scroll-reveal переходы */
@@ -205,7 +205,7 @@
 
   /* About */
   .about-text {
-    font-size: clamp(1.2rem, 2vw, 1.6rem); line-height: 1.6; color: var(--muted); max-width: 800px;
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem); line-height: 1.6; color: var(--muted); max-width: 850px;
   }
   .about-text b { color: var(--ink); font-weight: 500; }
 
@@ -242,6 +242,178 @@
     transition: transform 0.2s; align-self: flex-start;
   }
   .portfolio-link:hover { transform: scale(1.05); }
+
+  /* ═════════ ТАБЛИЦЫ С ЗАВЕСОЙ И ЗАСВЕТОМ ═════════ */
+  .table-block {
+    margin-bottom: 4rem;
+  }
+  .table-caption {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    color: var(--ink);
+  }
+  .table-subcaption {
+    font-size: 0.98rem;
+    color: var(--muted);
+    margin-bottom: 1.4rem;
+  }
+
+  /* Обёртка с фоновым мягким засветом */
+  .table-glow-stage {
+    position: relative;
+    border-radius: 24px;
+    background: rgba(14, 14, 16, 0.55);
+    border: 1px solid var(--line);
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+  }
+  /* Деликатный светящийся слой позади таблицы */
+  .table-glow-stage::before {
+    content: '';
+    position: absolute;
+    inset: -30%;
+    background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 0.055) 0%, rgba(200, 210, 240, 0.03) 30%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .table-glow-stage::after {
+    content: '';
+    position: absolute;
+    bottom: -20%;
+    right: -10%;
+    width: 60%;
+    height: 60%;
+    background: radial-gradient(circle, rgba(140, 160, 220, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Скролл-контейнер */
+  .table-scroll-wrap {
+    position: relative;
+    z-index: 2;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Стилизация полосы прокрутки */
+  .table-scroll-wrap::-webkit-scrollbar {
+    height: 7px;
+  }
+  .table-scroll-wrap::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+  }
+  .table-scroll-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+  }
+  .table-scroll-wrap::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
+  }
+
+  /* Сама таблица */
+  .custom-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+    font-size: 0.95rem;
+    min-width: 720px;
+  }
+  .custom-table.compact {
+    min-width: 640px;
+  }
+  .custom-table th, 
+  .custom-table td {
+    padding: 1.15rem 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    line-height: 1.55;
+    vertical-align: top;
+  }
+  .custom-table th {
+    background: rgba(255, 255, 255, 0.035);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: 0.92rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(8px);
+    z-index: 4;
+  }
+  .custom-table tbody tr {
+    transition: background-color 0.2s ease;
+  }
+  .custom-table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.035);
+  }
+  .custom-table tr:last-child td {
+    border-bottom: none;
+  }
+  .custom-table td {
+    color: var(--muted);
+  }
+  .custom-table td strong {
+    color: var(--ink);
+  }
+
+  /* Специфика для аналитической матрицы конкурентов */
+  .custom-table.matrix th,
+  .custom-table.matrix td {
+    text-align: center;
+  }
+  .custom-table.matrix th:first-child,
+  .custom-table.matrix td:first-child {
+    text-align: left;
+    min-width: 270px;
+    font-weight: 500;
+    color: var(--ink);
+    position: sticky;
+    left: 0;
+    background: rgba(14, 14, 16, 0.92);
+    backdrop-filter: blur(10px);
+    z-index: 3;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .custom-table.matrix th:first-child {
+    z-index: 5;
+    background: rgba(22, 22, 26, 0.95);
+  }
+  .custom-table .section-row td {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: var(--ink);
+    font-weight: 700;
+    text-align: left !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.88rem;
+    padding-top: 1.2rem;
+    padding-bottom: 1.2rem;
+  }
+  .custom-table .sub-row td:first-child {
+    padding-left: 2.2rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .custom-table .score-highlight {
+    color: #fff;
+    font-weight: 700;
+    background: rgba(255, 255, 255, 0.06);
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .custom-table .total-row td {
+    background: rgba(255, 255, 255, 0.09) !important;
+    font-weight: 800;
+    font-size: 1.15rem;
+    color: #ffffff;
+    border-top: 2px solid rgba(255, 255, 255, 0.25);
+  }
 
   /* FAQ Accordion */
   .faq-list { display: flex; flex-direction: column; gap: 1rem; }
@@ -291,8 +463,8 @@
     }
     body.is-open .menu { opacity: 1; visibility: visible; }
     .menu-inner { padding: 120px 30px 0; }
-    .menu-list { list-style: none; display: flex; flex-direction: column; gap: 30px; }
-    .menu-list a { font-size: 28px; color: var(--ink); display: block; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
+    .menu-list { list-style: none; display: flex; flex-direction: column; gap: 26px; }
+    .menu-list a { font-size: 26px; color: var(--ink); display: block; border-bottom: 1px solid var(--line); padding-bottom: 15px; }
     
     .brand { left: 24px; top: 28px; }
     .headline { left: 24px; top: 150px; font-size: 42px; white-space: normal; padding-right: 20px;}
@@ -301,11 +473,14 @@
     .sub span { display: inline; }
     .actions { left: 24px; top: 460px; flex-direction: column; align-items: flex-start; gap: 20px; }
     
-    .section-container { padding: 10vh 24px; }
+    .section-container { padding: 10vh 20px; }
     
     .steps-grid { grid-template-columns: 1fr; gap: 2rem; }
     .step-card:nth-child(3) { grid-column: span 1; width: 100%; }
     .portfolio-grid { grid-template-columns: 1fr; }
+
+    .custom-table th, .custom-table td { padding: 0.9rem 1rem; font-size: 0.88rem; }
+    .custom-table.matrix th:first-child, .custom-table.matrix td:first-child { min-width: 190px; }
   }
 
   /* ═════════ MANUAL QUIZ MODAL (REAL SURVEY) ═════════ */
@@ -446,6 +621,7 @@
   <nav class="links" aria-label="Основное меню">
     <a href="#portfolio">Проекты</a>
     <a href="#about">О нас</a>
+    <a href="#comparison">Сравнение</a>
     <a href="#features">Преимущества</a>
     <a href="#faq">Вопросы</a>
     <a href="#contact">Контакты</a>
@@ -460,6 +636,7 @@
     <ul class="menu-list">
       <li><a href="#portfolio">Проекты</a></li>
       <li><a href="#about">О нас</a></li>
+      <li><a href="#comparison">Сравнение</a></li>
       <li><a href="#features">Преимущества</a></li>
       <li><a href="#faq">Частые вопросы</a></li>
       <li><a href="#contact">Контакты</a></li>
@@ -505,6 +682,168 @@
       Мы создаем <b>razgruzKA</b> для тех, чье время стоит дорого. Мы сами проходили через хаос разрозненных таблиц, бесконечных чатов и утомительных отчетов, собираемых вручную по выходным.<br><br>
       Наша философия проста: человек должен творить, придумывать и развивать, а алгоритмы — брать на себя монотонную работу. Мы детально изучаем ваши повседневные процессы и внедряем точечные, интуитивно понятные инструменты, которые экономят часы вашего времени каждую неделю.
     </p>
+  </section>
+
+  <!-- Секция: Сравнение и Конкурентоспособность -->
+  <section id="comparison" class="section-container">
+    <h2>Сравнение и рынок</h2>
+    <p class="about-text" style="margin-bottom: 3.5rem;">
+      Мы честно оцениваем свои сильные стороны и зоны роста. Ниже представлены ключевые преимущества <b>razgruzKA</b>, структура рынка и факторная оценка конкурентоспособности.
+    </p>
+
+    <!-- ТАБЛИЦА 1 -->
+    <div class="table-block reveal">
+      <div class="table-caption">Таблица 1. Преимущества и недостатки предлагаемого решения</div>
+      <div class="table-subcaption">Анализ ценностного предложения по сравнению с альтернативами и меры по компенсации ограничений</div>
+      <div class="table-glow-stage">
+        <div class="table-scroll-wrap">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th style="width: 34%;">Преимущества</th>
+                <th style="width: 33%;">Недостатки</th>
+                <th style="width: 33%;">Меры по преодолению недостатков</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Индивидуальный подход и разработка «под ключ»:</strong> создание точечных цифровых инструментов (микросервисов, веб-приложений и ботов) под конкретные боли и рутину клиента без перегруженного функционала.</td>
+                <td>Ограниченность ресурсов небольшой команды разработчиков на старте при резком росте числа заказов.</td>
+                <td>Формирование библиотеки модульных готовых компонентов (No-code / Low-code, шаблоны бэкенда), привлечение разработчиков на аутсорс.</td>
+              </tr>
+              <tr>
+                <td><strong>Наличие реальных работающих кейсов и MVP:</strong> сервисы StaroSTATT (для старост) и Aydit (для аналитики первичной документации и таблиц).</td>
+                <td>Молодой бренд, отсутствие масштабной известности на корпоративном IT-рынке.</td>
+                <td>Продвижение через кейс-стади, сарафанное радио в профильных сообществах, экспертные публикации и таргетированная реклама.</td>
+              </tr>
+              <tr>
+                <td><strong>Доступная стоимость и высокая скорость запуска:</strong> клиент получает аудит процессов и прототип инструмента за считанные дни, без сложного ТЗ и месяцев разработки.</td>
+                <td>Сложность масштабирования полностью кастомных решений по сравнению с готовыми SaaS-коробками.</td>
+                <td>Постепенная типизация решений (пакетирование StaroSTATT и Aydit в самостоятельные тиражируемые сервисы по подписке).</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ТАБЛИЦА 2 -->
+    <div class="table-block reveal">
+      <div class="table-caption">Таблица 2. Основные сегменты конкурентов фирмы</div>
+      <div class="table-subcaption">Карта окружения: доля рынка, объемы продаж и характерные риски сегментов</div>
+      <div class="table-glow-stage">
+        <div class="table-scroll-wrap">
+          <table class="custom-table compact">
+            <thead>
+              <tr>
+                <th>Категория конкурента</th>
+                <th>География</th>
+                <th>Доля рынка</th>
+                <th>Предполагаемый объем</th>
+                <th>Предполагаемые потери / риски</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Крупные интеграторы и корпоративные SaaS/ERP</strong><br><span style="font-size:0.85rem; color:var(--muted);">(Битрикс24, 1С, Directum и др.)</span></td>
+                <td>Москва / вся РФ</td>
+                <td>~50%</td>
+                <td>Высокий (десятки млрд руб.)</td>
+                <td>Низкие (высокий порог удержания клиентов)</td>
+              </tr>
+              <tr>
+                <td><strong>Фрилансеры и частные No-code/Python разработчики</strong><br><span style="font-size:0.85rem; color:var(--muted);">(Kwork, FL.ru, Telegram-чаты)</span></td>
+                <td>Удаленно по всей РФ</td>
+                <td>~30%</td>
+                <td>Средний (фрагментированный)</td>
+                <td>Высокие (нет гарантий, срыв дедлайнов)</td>
+              </tr>
+              <tr>
+                <td><strong>Локальные заказные веб-студии и No-code агентства</strong><br><span style="font-size:0.85rem; color:var(--muted);">(Заказная разработка сайтов и сервисов)</span></td>
+                <td>Москва / крупные города</td>
+                <td>~15%</td>
+                <td>Средний (десятки млн руб.)</td>
+                <td>Средние (зависимость от входящего трафика)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ТАБЛИЦА 3 -->
+    <div class="table-block reveal">
+      <div class="table-caption">Таблица 3. Конкурентоспособность фирмы и главных конкурентов</div>
+      <div class="table-subcaption">Сравнительная оценка по 5-балльной шкале. Листайте по горизонтали для просмотра всех участников</div>
+      <div class="table-glow-stage">
+        <div class="table-scroll-wrap">
+          <table class="custom-table matrix">
+            <thead>
+              <tr>
+                <th>Фактор конкурентоспособности</th>
+                <th class="score-highlight" style="min-width: 140px;">razgruzKA</th>
+                <th style="min-width: 150px;">A (Интеграторы)</th>
+                <th style="min-width: 150px;">B (Фрилансеры)</th>
+                <th style="min-width: 150px;">C (Веб-студии)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- 1. ТОВАР -->
+              <tr class="section-row"><td colspan="5">1. ТОВАР (IT-решения и разработка)</td></tr>
+              <tr><td>1.1. Качество решения</td><td class="score-highlight">5</td><td>4</td><td>3</td><td>4</td></tr>
+              <tr><td>1.2. Технико-экономические показатели</td><td class="score-highlight">5</td><td>3</td><td>3</td><td>4</td></tr>
+              <tr><td>1.3. Престиж торговой марки</td><td class="score-highlight">2</td><td>5</td><td>1</td><td>3</td></tr>
+              <tr><td>1.4. Упаковка (презентация, сайт, дизайн)</td><td class="score-highlight">5</td><td>4</td><td>2</td><td>4</td></tr>
+              <tr><td>1.5. Уровень послепродажного обслуживания</td><td class="score-highlight">5</td><td>3</td><td>2</td><td>4</td></tr>
+              <tr><td>1.6. Гарантийный срок (поддержка ПО)</td><td class="score-highlight">4</td><td>5</td><td>1</td><td>3</td></tr>
+              <tr><td>1.7. Уникальность подхода</td><td class="score-highlight">5</td><td>3</td><td>2</td><td>3</td></tr>
+              <tr><td>1.8. Многовариантность использования</td><td class="score-highlight">4</td><td>5</td><td>3</td><td>4</td></tr>
+              <tr><td>1.9. Надежность решений</td><td class="score-highlight">4</td><td>5</td><td>2</td><td>4</td></tr>
+              <tr><td>1.10. Защищенность патентами</td><td class="score-highlight">2</td><td>5</td><td>1</td><td>2</td></tr>
+
+              <!-- 2. ЦЕНА -->
+              <tr class="section-row"><td colspan="5">2. ЦЕНА</td></tr>
+              <tr><td>2.1. Продажная цена</td><td class="score-highlight">4</td><td>2</td><td>5</td><td>3</td></tr>
+              <tr><td>2.2. Процент скидки с цены</td><td class="score-highlight">4</td><td>4</td><td>2</td><td>3</td></tr>
+              <tr><td>2.3. Сроки платежа (поэтапность)</td><td class="score-highlight">5</td><td>4</td><td>3</td><td>4</td></tr>
+              <tr><td>2.4. Условия рассрочки / кредита</td><td class="score-highlight">3</td><td>5</td><td>1</td><td>3</td></tr>
+
+              <!-- 3. КАНАЛЫ СБЫТА -->
+              <tr class="section-row"><td colspan="5">3. КАНАЛЫ СБЫТА</td></tr>
+              <tr class="sub-row"><td>— Прямая доставка (онлайн-доступ, cloud)</td><td class="score-highlight">5</td><td>4</td><td>5</td><td>5</td></tr>
+              <tr class="sub-row"><td>— Торговые представители</td><td class="score-highlight">2</td><td>5</td><td>1</td><td>3</td></tr>
+              <tr class="sub-row"><td>— Предприятия-производители (партнеры)</td><td class="score-highlight">3</td><td>5</td><td>1</td><td>3</td></tr>
+              <tr class="sub-row"><td>— Оптовые посредники</td><td class="score-highlight">1</td><td>4</td><td>1</td><td>2</td></tr>
+              <tr class="sub-row"><td>— Комиссионеры и маклеры</td><td class="score-highlight">2</td><td>4</td><td>1</td><td>2</td></tr>
+              <tr class="sub-row"><td>— Дилеры</td><td class="score-highlight">1</td><td>4</td><td>1</td><td>2</td></tr>
+              <tr><td>3.2. Степень охвата рынка</td><td class="score-highlight">2</td><td>5</td><td>2</td><td>3</td></tr>
+              <tr><td>3.3. Размещение мощностей (облачные сервера)</td><td class="score-highlight">4</td><td>5</td><td>2</td><td>4</td></tr>
+              <tr><td>3.4. Система транспортировки (деплой/доставка ПО)</td><td class="score-highlight">5</td><td>4</td><td>3</td><td>4</td></tr>
+              <tr><td>3.5. Система контроля запасов (база кода и модулей)</td><td class="score-highlight">4</td><td>5</td><td>2</td><td>4</td></tr>
+
+              <!-- 4. ПРОДВИЖЕНИЕ -->
+              <tr class="section-row"><td colspan="5">4. ПРОДВИЖЕНИЕ ТОВАРОВ НА РЫНКАХ</td></tr>
+              <tr class="sub-row"><td>— Реклама для конечных потребителей</td><td class="score-highlight">4</td><td>5</td><td>2</td><td>3</td></tr>
+              <tr class="sub-row"><td>— Реклама для торговых посредников</td><td class="score-highlight">2</td><td>4</td><td>1</td><td>2</td></tr>
+              <tr class="sub-row"><td>— Стимулирование потребителей (демо, аудит)</td><td class="score-highlight">5</td><td>3</td><td>2</td><td>3</td></tr>
+              <tr class="sub-row"><td>— Демонстрационная торговля (шоукейс кейсов)</td><td class="score-highlight">5</td><td>4</td><td>2</td><td>4</td></tr>
+              <tr class="sub-row"><td>— Показ образцов товаров (демо StaroSTATT/Aydit)</td><td class="score-highlight">5</td><td>4</td><td>2</td><td>4</td></tr>
+              <tr class="sub-row"><td>— Подготовка персонала сбытовых служб</td><td class="score-highlight">3</td><td>5</td><td>1</td><td>3</td></tr>
+              <tr><td>4.3. Продажа товаров (текущий объем внедрений)</td><td class="score-highlight">2</td><td>5</td><td>2</td><td>3</td></tr>
+
+              <!-- ИТОГО -->
+              <tr class="total-row">
+                <td>ОБЩЕЕ КОЛИЧЕСТВО БАЛЛОВ</td>
+                <td class="score-highlight" style="font-size: 1.25rem;">112</td>
+                <td>132</td>
+                <td>62</td>
+                <td>102</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </section>
 
   <!-- Секция: Преимущества (Шаги) -->
@@ -650,7 +989,6 @@
         <div class="notif-text"><h4>Входящие</h4><p>Ваша проблема решена — открыть</p></div>
       </div>
 
-      <!-- ИЗМЕНЕННЫЙ БЛОК ПИСЬМА -->
       <div class="email-view" id="emailView">
         <div class="email-header"><h2>Решение найдено</h2><p style="color:#aaa;">От: razgruzKA</p></div>
         <div class="email-body">
@@ -719,7 +1057,7 @@
   /* ПЛАВНОЕ ПОЯВЛЕНИЕ */
   (function () {
     const items = document.querySelectorAll(
-      '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link, .portfolio-card'
+      '.section-container h2, .about-text, .step-card, .faq-list details, .contact-links .contact-link, .portfolio-card, .table-block'
     );
     items.forEach((el, i) => {
       el.classList.add('reveal');
@@ -885,7 +1223,6 @@
     
     notif.classList.remove('show');
     document.getElementById('emailView').classList.add('open');
-    // Демо заканчивается здесь. Теперь пользователь может сам нажимать кнопки.
   }
 </script>
 
