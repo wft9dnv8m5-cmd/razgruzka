@@ -139,7 +139,23 @@
     display: flex; align-items: center; white-space: nowrap; gap: calc(26 * var(--u));
   }
   .links a { font-size: calc(19.0 * var(--u)); font-weight: 400; color: var(--nav); transition: color 0.2s; }
-  .links a:hover { color: var(--ink); }
+  .links a { position: relative; }
+  .links a::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -0.3em;
+    height: 1px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+  }
+  .links a:hover, .links a:focus-visible { color: var(--ink); }
+  .links a:hover::after, .links a:focus-visible::after { transform: scaleX(1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .links a::after { transition: none; }
+  }
 
   #burger { display: none; }
 
